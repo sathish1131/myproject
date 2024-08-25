@@ -1,0 +1,74 @@
+{% extends 'background.html' %}
+
+{% block content %}
+
+<div class="calculator">
+    <h1>CALCULATOR</h1>
+    <div class="calculator-screen">
+        {{ result|default:"0" }}
+    </div>
+    <div class="calculator-buttons">
+        <div class="button triple" id="ac">AC</div>
+        <div class="button operator" id="divide">/</div>
+        <div class="button" id="7">7</div>
+        <div class="button" id="8">8</div>
+        <div class="button" id="9">9</div>
+        <div class="button operator" id="multiply">*</div>
+        <div class="button" id="4">4</div>
+        <div class="button" id="5">5</div>
+        <div class="button" id="6">6</div>
+        <div class="button operator" id="subtract">-</div>
+        <div class="button" id="1">1</div>
+        <div class="button" id="2">2</div>
+        <div class="button" id="3">3</div>
+        <div class="button operator" id="add">+</div>
+        <div class="button bottom-left-radius" id="00">00</div>
+        <div class="button" id="0">0</div>
+        <div class="button" id="decimal">.</div>
+        <div class="button operator bottom-right-radius" id="equals">=</div>
+    </div>
+</div>
+<script>
+    const screen = document.querySelector('.calculator-screen');
+    let currentInput = '';
+    let operator = '';
+    let firstOperand = '';
+    document.querySelectorAll('.button').forEach(button => {
+        button.addEventListener('click', () => {
+            const value = button.id;
+            if (value === 'ac') {
+                currentInput = '';
+                operator = '';
+                firstOperand = '';
+                screen.textContent = '0';
+            } else if (value === 'equals') {
+                if (operator && firstOperand !== '') {
+                    try {
+                        currentInput = eval(`${firstOperand} ${operator} ${currentInput}`);
+                        screen.textContent = currentInput;
+                        operator = '';
+                        firstOperand = '';
+                    } catch {
+                        screen.textContent = 'Error';
+                    }
+                }
+            } else if (['add', 'subtract', 'multiply', 'divide'].includes(value)) {
+                if (firstOperand === '') {
+                    firstOperand = currentInput;
+                } else if (operator) {
+                    firstOperand = eval(`${firstOperand} ${operator} ${currentInput}`);
+                }
+                operator = value === 'add' ? '+' : value === 'subtract' ? '-' : value === 'multiply' ? '*' : '/';
+                currentInput = '';
+            } else {
+                if (value === 'decimal' && currentInput.includes('.')) {
+                    return;
+                }
+                currentInput += value === 'decimal' ? '.' : value;
+                screen.textContent = currentInput;
+            }
+        });
+    });
+</script>
+
+{% endblock %}
