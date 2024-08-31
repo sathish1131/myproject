@@ -4,71 +4,38 @@
 
 <div class="calculator">
     <h1>CALCULATOR</h1>
-    <div class="calculator-screen">
-        {{ result|default:"0" }}
-    </div>
-    <div class="calculator-buttons">
-        <div class="button triple" id="ac">AC</div>
-        <div class="button operator" id="divide">/</div>
-        <div class="button" id="7">7</div>
-        <div class="button" id="8">8</div>
-        <div class="button" id="9">9</div>
-        <div class="button operator" id="multiply">*</div>
-        <div class="button" id="4">4</div>
-        <div class="button" id="5">5</div>
-        <div class="button" id="6">6</div>
-        <div class="button operator" id="subtract">-</div>
-        <div class="button" id="1">1</div>
-        <div class="button" id="2">2</div>
-        <div class="button" id="3">3</div>
-        <div class="button operator" id="add">+</div>
-        <div class="button bottom-left-radius" id="00">00</div>
-        <div class="button" id="0">0</div>
-        <div class="button" id="decimal">.</div>
-        <div class="button operator bottom-right-radius" id="equals">=</div>
-    </div>
+    <form action="{% url 'index' %}" method="POST">
+        {% csrf_token %}
+        <input class="calculator-screen" type="text" name="expression" id="display" value="{{ result|default:'' }}">
+        <div class="calculator-buttons">
+            <button class="button triple" type="button" onclick="clearDisplay()" id="ac">AC</button>
+            <button class="button operator" type="button" onclick="appendValue('/')" id="divide">/</button>
+            <button class="button" type="button" onclick="appendValue('7')" id="7">7</button>
+            <button class="button" type="button" onclick="appendValue('8')" id="8">8</button>
+            <button class="button" type="button" onclick="appendValue('9')" id="9">9</button>
+            <button class="button operator" type="button" onclick="appendValue('*')" id="multiply">*</button>
+            <button class="button" type="button" onclick="appendValue('4')" id="4">4</button>
+            <button class="button" type="button" onclick="appendValue('5')" id="5">5</button>
+            <button class="button" type="button" onclick="appendValue('6')" id="6">6</button>
+            <button class="button operator" type="button" onclick="appendValue('-')" id="subtract">-</button>
+            <button class="button" type="button" onclick="appendValue('1')" id="1">1</button>
+            <button class="button" type="button" onclick="appendValue('2')" id="2">2</button>
+            <button class="button" type="button" onclick="appendValue('3')" id="3">3</button>
+            <button class="button operator" type="button" onclick="appendValue('+')" id="add">+</button>
+            <button class="button bottom-left-radius" type="button" onclick="appendValue('00')" id="00">00</button>
+            <button class="button" type="button" onclick="appendValue('0')" id="0">0</button>
+            <button class="button" type="button" onclick="appendValue('.')" id="decimal">.</button>
+            <button class="button operator bottom-right-radius" type="button" onclick="appendValue('=')" id="equals">=</button>
+        </div>
+    </form>
 </div>
 <script>
-    const screen = document.querySelector('.calculator-screen');
-    let currentInput = '';
-    let operator = '';
-    let firstOperand = '';
-    document.querySelectorAll('.button').forEach(button => {
-        button.addEventListener('click', () => {
-            const value = button.id;
-            if (value === 'ac') {
-                currentInput = '';
-                operator = '';
-                firstOperand = '';
-                screen.textContent = '0';
-            } else if (value === 'equals') {
-                if (operator && firstOperand !== '') {
-                    try {
-                        currentInput = eval(`${firstOperand} ${operator} ${currentInput}`);
-                        screen.textContent = currentInput;
-                        operator = '';
-                        firstOperand = '';
-                    } catch {
-                        screen.textContent = 'Error';
-                    }
-                }
-            } else if (['add', 'subtract', 'multiply', 'divide'].includes(value)) {
-                if (firstOperand === '') {
-                    firstOperand = currentInput;
-                } else if (operator) {
-                    firstOperand = eval(`${firstOperand} ${operator} ${currentInput}`);
-                }
-                operator = value === 'add' ? '+' : value === 'subtract' ? '-' : value === 'multiply' ? '*' : '/';
-                currentInput = '';
-            } else {
-                if (value === 'decimal' && currentInput.includes('.')) {
-                    return;
-                }
-                currentInput += value === 'decimal' ? '.' : value;
-                screen.textContent = currentInput;
-            }
-        });
-    });
+    function clearDisplay(){
+        document.getElementById('display').value = '';
+    }
+    function appendValue(value){
+        document.getElementById('display').value += value;
+    }
 </script>
 
 {% endblock %}

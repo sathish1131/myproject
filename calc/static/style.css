@@ -21,6 +21,7 @@ body {
     padding: 15px;
     text-align: right;
     border-bottom: 2px solid #333;
+    width: 90%;
 }
 .calculator-buttons {
     display: grid;

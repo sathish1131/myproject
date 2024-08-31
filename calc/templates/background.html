@@ -7,7 +7,15 @@
     <title>calc</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">   
 </head>
-<body>
+<style>
+    body{
+        background-image: url("{% static 'calc.jpeg' %}");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+</style>
+<body style="background-color: lightgrey;">
     {% block content %}
 
 
