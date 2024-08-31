@@ -1,10 +1,10 @@
-{% extends 'background.html' %}
+{% extends 'calc_background.html' %}
 
 {% block content %}
 
 <div class="calculator">
     <h1>CALCULATOR</h1>
-    <form action="{% url 'index' %}" method="POST">
+    <form action="calculate/result" method="POST">
         {% csrf_token %}
         <input class="calculator-screen" type="text" name="expression" id="display" value="{{ result|default:'' }}">
         <div class="calculator-buttons">
