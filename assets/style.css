@@ -50,10 +50,7 @@ body {
 .button.double {
     grid-column: span 2;
 }
-.button.triple {
-    grid-column: span 3;
-}
-.button.triple:hover {
+.button.double:hover {
     background-color: #f57f17;
 }
 .calculator-screen {

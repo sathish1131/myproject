@@ -4,11 +4,12 @@
 
 <div class="calculator">
     <h1>CALCULATOR</h1>
-    <form action="calculate/result" method="POST">
+    <form action="calculate" method="POST">
         {% csrf_token %}
         <input class="calculator-screen" type="text" name="expression" id="display" value="{{ result|default:'' }}">
         <div class="calculator-buttons">
-            <button class="button triple" type="button" onclick="clearDisplay()" id="ac">AC</button>
+            <button class="button double" type="button" onclick="clearDisplay()" id="ac">AC</button>
+            <button class="button" type="button" onclick="deleteDigit()" id="c">C</button>
             <button class="button operator" type="button" onclick="appendValue('/')" id="divide">/</button>
             <button class="button" type="button" onclick="appendValue('7')" id="7">7</button>
             <button class="button" type="button" onclick="appendValue('8')" id="8">8</button>
@@ -25,7 +26,7 @@
             <button class="button bottom-left-radius" type="button" onclick="appendValue('00')" id="00">00</button>
             <button class="button" type="button" onclick="appendValue('0')" id="0">0</button>
             <button class="button" type="button" onclick="appendValue('.')" id="decimal">.</button>
-            <button class="button operator bottom-right-radius" type="button" onclick="appendValue('=')" id="equals">=</button>
+            <button class="button operator bottom-right-radius" type="submit" id="equals">=</button>
         </div>
     </form>
 </div>
@@ -35,6 +36,10 @@
     }
     function appendValue(value){
         document.getElementById('display').value += value;
+    }
+    function deleteDigit(){
+        let expression = document.getElementById('display');
+        expression.value = expression.value.slice(0, -1);
     }
 </script>
 
