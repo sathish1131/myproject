@@ -3,5 +3,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.files, name= "files")
+    path('files', views.files, name= "files")
 ]
