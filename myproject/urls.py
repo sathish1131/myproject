@@ -25,5 +25,6 @@ urlpatterns = [
     path('me/', include('todo.urls')),
     path('me/', include('quotes.urls')),
     path('me/', include('calender.urls')),
-    path('me/', include('files.urls'))
+    path('me/', include('files.urls')),
+    path('me/', include('notes.urls'))
 ]
