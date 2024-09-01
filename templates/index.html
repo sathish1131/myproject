@@ -4,8 +4,21 @@
 
 {% block content %}
 
-<div class="calculator">
-    <h1>CALCULATOR</h1>
+<div class="accounts-module">
+    <h1>Home</h1>
+    <div>
+        {% if user.is_authenticated %}
+        <li><a href="accounts/logout">Logout</a></li>
+        {% else %}
+        <li><a href="accounts/register">Register</a></li>
+        <li><a href="accounts/login">Login</a></li>
+            {% for message in messages %}
+                <div>
+                    <h3>{{message}}</h3>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 </div>
 
 {% endblock %}
