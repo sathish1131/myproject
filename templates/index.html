@@ -4,21 +4,26 @@
 
 {% block content %}
 
-<div class="accounts-module">
-    <h1>Home</h1>
-    <div>
-        {% if user.is_authenticated %}
-        <li><a href="accounts/logout">Logout</a></li>
-        {% else %}
-        <li><a href="accounts/register">Register</a></li>
-        <li><a href="accounts/login">Login</a></li>
-            {% for message in messages %}
-                <div>
-                    <h3>{{message}}</h3>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+<div class="container">
+    <div class="panel" onclick="onPanelClick('quotes')">Quotes</div> 
+    <div class="panel" onclick="onPanelClick('calculator')">Calculator</div> 
+    <div class="panel" onclick="onPanelClick('todo')">Todo-List</div>
+    <div class="panel" onclick="onPanelClick('calender')">Calender</div> 
+    <div class="panel" onclick="onPanelClick('notes')">Notes</div>
+    <div class="panel" onclick="onPanelClick('files')">Files</div>   
 </div>
+<script id="auth_status" type="application/json">
+    {{ user.is_authenticated }}
+</script>
+<script>
+    const isAuthenticated = JSON.parse(document.getElementById('auth_status').textContent);
+    function onPanelClick(app){
+        if(isAuthenticated){
+            window.location.href = `${app}`;
+        }else{
+            window.location.href = `login`;
+        }
+    }
+</script>
 
 {% endblock %}

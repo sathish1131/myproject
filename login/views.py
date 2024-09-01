@@ -20,5 +20,4 @@ def login(request):
     
 def logout(request):
     auth.logout(request)
-    messages.info(request, 'Logged Out Successfully!!!')
     return redirect('/')
