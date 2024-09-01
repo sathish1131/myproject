@@ -21,10 +21,10 @@ urlpatterns = [
     path('', include('home.urls')),
     path('accounts/', include('register.urls')),
     path('accounts/', include('login.urls')),
-    path('me/', include('calc.urls')),
-    path('me/', include('todo.urls')),
-    path('me/', include('quotes.urls')),
-    path('me/', include('calender.urls')),
-    path('me/', include('files.urls')),
-    path('me/', include('notes.urls'))
+    path('apps/', include('calc.urls')),
+    path('apps/', include('todo.urls')),
+    path('apps/', include('quotes.urls')),
+    path('apps/', include('calender.urls')),
+    path('apps/', include('files.urls')),
+    path('apps/', include('notes.urls'))
 ]
