@@ -5,25 +5,19 @@
 {% block content %}
 
 <div class="container">
-    <div class="panel" onclick="onPanelClick('quotes')">Quotes</div> 
-    <div class="panel" onclick="onPanelClick('calculator')">Calculator</div> 
-    <div class="panel" onclick="onPanelClick('todo')">Todo-List</div>
-    <div class="panel" onclick="onPanelClick('calender')">Calender</div> 
-    <div class="panel" onclick="onPanelClick('notes')">Notes</div>
-    <div class="panel" onclick="onPanelClick('files')">Files</div>   
+    {% for app in apps %}
+    {% if user.is_authenticated %}
+    <div class="panel">
+        <a href="{{app.url}}">{{app.name}}</a>
+        <p>{{app.description}}</p>
+    </div>
+    {% else %}
+    <div class="panel">
+        <a href="{% url 'login' %}">{{app.name}}</a>
+        <p>{{app.description}}</p>
+    </div>
+    {% endif %}
+    {% endfor %}   
 </div>
-<script id="auth_status" type="application/json">
-    {{ user.is_authenticated }}
-</script>
-<script>
-    const isAuthenticated = JSON.parse(document.getElementById('auth_status').textContent);
-    function onPanelClick(app){
-        if(isAuthenticated){
-            window.location.href = `${app}`;
-        }else{
-            window.location.href = `login`;
-        }
-    }
-</script>
 
 {% endblock %}
