@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -6,7 +12,9 @@ body {
     margin: 0;
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
+    padding: 30px;
 }
+
 .calculator {
     border: 2px solid #333;
     border-radius: 10px;
@@ -14,6 +22,7 @@ body {
     background-color: #fff;
     width: 320px;
 }
+
 .calculator-screen {
     background-color: #222;
     color: #fff;
@@ -21,13 +30,15 @@ body {
     padding: 15px;
     text-align: right;
     border-bottom: 2px solid #333;
-    width: 90%;
+    width: 100%;
 }
+
 .calculator-buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1px;
 }
+
 .button {
     background-color: #eee;
     border: 1px solid #ccc;
@@ -37,32 +48,42 @@ body {
     cursor: pointer;
     transition: background-color 0.3s;
 }
+
 .button:hover {
     background-color: #ddd;
 }
+
 .button.operator {
     background-color: #f9a825;
     color: #fff;
 }
+
 .button.operator:hover {
     background-color: #f57f17;
 }
+
 .button.double {
     grid-column: span 2;
 }
+
 .button.double:hover {
     background-color: #f57f17;
 }
+
 .calculator-screen {
     border-radius: 10px 10px 0 0;
 }
-.bottom-left-radius{
+
+.bottom-left-radius {
     border-bottom-left-radius: 10px;
 }
-.bottom-right-radius{
+
+.bottom-right-radius {
     border-bottom-right-radius: 10px;
 }
+
 h1 {
+    padding: 15px;
     text-align: center;
     font-size: 24px;
     font-family: Arial, Helvetica, sans-serif;
@@ -71,22 +92,25 @@ h1 {
     color: darkblue;
     text-shadow: 4px 4px 10px darkblue;
 }
+
 .account-module {
     border: 2px;
-    border-radius: 2px;
+    border-radius: 6px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
     background-color: rgba(255, 255, 255, 0.5);
     width: 320px;
 }
-.account-module input{
+
+.account-module input {
     border: 1px;
-    border-radius: 2px;
+    border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.5);
     font-size: 20px;
 }
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -97,6 +121,7 @@ h1 {
     top: 0;
     width: 100%;
 }
+
 .navbar a {
     margin: 0 20px;
     text-decoration: none;
@@ -106,37 +131,17 @@ h1 {
     font-style: italic;
     color: darkblue;
     text-shadow: 4px 4px 10px darkblue;
-}
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-.panel {
-    width: 30%;
-    max-width: 300px;
-    height: 150px;
-    background-color: rgba(0, 0, 0, 0);
-    border: 1px solid #ddd;
     border-radius: 6px;
+    box-sizing: border-box;
     text-align: center;
-    align-items: center;
-    line-height: 100px;
-    margin: 10px;
-    cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bolder;
-    font-style: italic;
-    color: darkblue;
-    text-shadow: 4px 4px 10px darkblue;
-    font-size: 30px;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: background-color 0.3s, border-color 0.3s;;
 }
-.panel:hover {
+
+.navbar a:hover {
     background-color: #ddd;
     border-color: #222;
 }
+
 .user_greet {
     margin: 0 20px;
     text-decoration: none;
@@ -146,4 +151,55 @@ h1 {
     font-style: italic;
     color: darkblue;
     text-shadow: 4px 4px 10px darkblue;
+}
+
+.home-layout {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    gap: 30px;
+    margin-top: 100px;
+}
+
+.panel {
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0);
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    font-style: italic;
+    color: darkblue;
+    text-shadow: 4px 4px 10px darkblue;
+    text-decoration: none;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.panel h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.panel p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .home-layout {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .home-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel:hover {
+    background-color: #ddd;
+    border-color: #222;
 }

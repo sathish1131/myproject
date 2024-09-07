@@ -4,18 +4,18 @@
 
 {% block content %}
 
-<div class="container">
+<div class="home-layout">
     {% for app in apps %}
     {% if user.is_authenticated %}
-    <div class="panel">
-        <a href="{{app.url}}">{{app.name}}</a>
-        <p>{{app.description}}</p>
-    </div>
+        <a class="panel" href="{{app.url}}">
+            <h2>{{app.name}}</h2><br>
+            <p>{{app.description}}</p>
+        </a>
     {% else %}
-    <div class="panel">
-        <a href="{% url 'login' %}">{{app.name}}</a>
-        <p>{{app.description}}</p>
-    </div>
+        <a class="panel" href="{% url 'login' %}">
+            <h2>{{app.name}}</h2>
+            <p>{{app.description}}</p>
+        </a>
     {% endif %}
     {% endfor %}   
 </div>
