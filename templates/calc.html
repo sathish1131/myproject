@@ -1,11 +1,10 @@
 {% extends 'background.html' %}
 
 {% block title %}Calculator{% endblock %}
+{% block page_title %}Calculator{% endblock %}
 
 {% block content %}
-
 <div class="calculator">
-    <h1>CALCULATOR</h1>
     <form action="calculate" method="POST">
         {% csrf_token %}
         <input class="calculator-screen" type="text" name="expression" id="display" value="{{ result|default:'' }}">
