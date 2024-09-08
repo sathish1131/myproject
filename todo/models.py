@@ -4,4 +4,4 @@ from django.db import models
 
 class TodoList(models.Model):
     status = models.BooleanField(default=False)
-    text = models.CharField(max_length=500)
+    task = models.CharField(max_length=500)
