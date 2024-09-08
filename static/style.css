@@ -250,26 +250,27 @@ th {
 }
 
 .todo-grid th:nth-child(1), .todo-grid td:nth-child(1) {
-    width: 50px;
+    justify-content: center;
+    text-align: center;
+    width: 150px;
 }
 
 .todo-grid th:nth-child(2), .todo-grid td:nth-child(2) {
-    width: 700;
+    display: flex;
+    width: 500px;
     font-weight: bolder;
+    align-items: center;
+    line-height: normal;
 }
 
 .todo-grid th:nth-child(3), .todo-grid td:nth-child(3) {
-    width: 100px;
+    justify-content: center;
+    text-align: center;
+    width: 150px;
 }
 
 .todo-grid th:nth-child(4), .todo-grid td:nth-child(4) {
-    width: 50px;
-}
-
-input[type="checkbox"] {
-    justify-content: center;
-    vertical-align: middle;
-    margin: 0;
+    width: 100px;
 }
 
 .add-button {
@@ -301,10 +302,16 @@ input[type="checkbox"] {
 .status-button {
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bolder;
-    font-size: 16px;
-    color: #333;
+    font-size: 14px;
+    width: 75px;
+    height: 25px;
+    color: #222;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     padding: 4px 8px;
-    border-radius: 6px;
+    border-radius: 4px;
+    line-height: normal;
 }
 
 .update-button {

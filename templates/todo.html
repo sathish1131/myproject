@@ -123,11 +123,11 @@
                 <td>
                     <button class="status-button">{{ task.priority }}</button>
                 </td>
-                <td>
-                    <a href="#" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#editTaskModal">
+                <td style="display:flex; align-items:center;">
+                    <a href="#" class="btn btn-link" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#editTaskModal">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <a href="#" class="btn btn-link ml-2" data-bs-toggle="modal" data-bs-target="#deleteTaskModal">
+                    <a href="#" class="btn btn-link ml-2" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#deleteTaskModal">
                         <i class="fas fa-trash"></i>
                     </a>
                 </td>
@@ -162,11 +162,13 @@
                                 <td>
                                     <button class="status-button">${task.priority}</button>
                                 </td>
-                                <td>
-                                    <select name="action" id="todo-action">
-                                        <option value="edit">Edit</option>
-                                        <option value="delete">Delete</option>
-                                    </select>
+                                <td style="display:flex; align-items:center;">
+                                    <a href="#" class="btn btn-link" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#editTaskModal">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-link ml-2" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#deleteTaskModal">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>`;
                             $('#task-table tbody').append(row);
@@ -184,7 +186,7 @@
     });
     let currentTaskId;
     $('#edit-btn').on('click', function(){
-        currentTaskId = $(this).data('task-id');
+        currentTaskId = $(this).data('id');
         $.ajax({
             url: `/task-edit/${currentTaskId}/`,
             method: 'GET',
@@ -221,7 +223,7 @@
         });
     });
     $('#delete-btn').on('click', function(){
-        currentTaskId = $(this).data('task-id');
+        currentTaskId = $(this).data('id');
         $('#deleteTaskModal').modal('show');
     });
     $('#confirm-delete').on('click', function(){
