@@ -4,8 +4,11 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class TodoList(models.Model):
-    priority_choices = [(1, 'Urjent'), (2, 'Normal'), (3, 'Optional')]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
     task = models.CharField(max_length=500)
-    priority = models.IntegerField(priority_choices, default=3)
+    priority = models.IntegerField(choices=[(1, 'High'), (2, 'Medium'), (3, 'low')], default=3)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Task for {self.user.first_name} (Priority: {self.priority})"

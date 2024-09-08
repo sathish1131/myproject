@@ -5,9 +5,14 @@
 }
 
 body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
-    padding: 20px;
+    padding: 30px;
 }
 
 .calculator {
@@ -16,6 +21,7 @@ body {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     background-color: #fff;
     width: 320px;
+    margin-top: 50px;
 }
 
 .calculator-screen {
@@ -25,7 +31,7 @@ body {
     padding: 15px;
     text-align: right;
     border-bottom: 2px solid #333;
-    width: 90%;
+    width: 100%;
 }
 
 .calculator-buttons {
@@ -78,8 +84,9 @@ body {
 }
 
 h1 {
+    padding: 15px;
     text-align: center;
-    font-size: 24px;
+    font-size: 30px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bolder;
     font-style: italic;
@@ -89,7 +96,7 @@ h1 {
 
 .account-module {
     border: 2px;
-    border-radius: 2px;
+    border-radius: 6px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
     background-color: rgba(255, 255, 255, 0.5);
     width: 320px;
@@ -97,7 +104,7 @@ h1 {
 
 .account-module input {
     border: 1px;
-    border-radius: 2px;
+    border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
@@ -125,6 +132,22 @@ h1 {
     font-style: italic;
     color: darkblue;
     text-shadow: 4px 4px 10px darkblue;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-align: center;
+    transition: background-color 0.3s, border-color 0.3s;
+    padding: 5px 10px;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    border-color: #222;
+    padding: 5px 10px;
+}
+
+.nav-header {
+    text-align: center;
+    flex-grow: 1;
 }
 
 .user_greet {
@@ -142,11 +165,12 @@ h1 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
+    margin-top: 100px;
 }
 
 .panel {
-    padding: 20px;
+    padding: 30px;
     background-color: rgba(0, 0, 0, 0);
     border: 1px solid #ddd;
     border-radius: 6px;
@@ -162,7 +186,7 @@ h1 {
 }
 
 .panel h2 {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-size: 1.5rem;
 }
 
@@ -186,4 +210,90 @@ h1 {
 .panel:hover {
     background-color: #ddd;
     border-color: #222;
+}
+
+.todo-layout {
+    width: 900px;
+    height: 500px;
+    overflow: auto;
+    background-color: #ddd;
+    border-radius: 4px;
+    border: 1px solid  #333;
+    padding: 10px;
+    margin-top: 50px;
+}
+
+.todo-grid {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 10px;
+    text-align: center;
+}
+
+td {
+    padding: 10px;
+    text-align: left;
+}
+
+thead {
+    background-color: lightgrey;
+}
+
+th {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    font-style: italic;
+    color: darkblue;
+}
+
+.todo-grid th:nth-child(1), .todo-grid td:nth-child(1) {
+    width: 50px;
+}
+
+.todo-grid th:nth-child(2), .todo-grid td:nth-child(2) {
+    width: 700;
+    font-weight: bolder;
+}
+
+.todo-grid th:nth-child(3), .todo-grid td:nth-child(3) {
+    width: 100px;
+}
+
+.todo-grid th:nth-child(4), .todo-grid td:nth-child(4) {
+    width: 50px;
+}
+
+input[type="checkbox"] {
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.add-button {
+    transition-duration: 0.4s;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    font-size: 16px;
+    color: darkblue;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background-color: #ddd;
+}
+
+.add-button:hover {
+    background-color: darkblue;
+    color: white;
+}
+
+.todo-action {
+    padding: 4px 6px;
+    background-color: #ddd;
+}
+
+.todo-action li:hover {
+    background-color: darkblue;
+    color: white;
 }
