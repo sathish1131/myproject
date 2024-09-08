@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 
 class TodoList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
+    status = models.CharField(max_length=50, default="Pending")
     description = models.CharField(max_length=500)
-    priority = models.IntegerField(choices=[(1, 'High'), (2, 'Medium'), (3, 'low')], default=3)
+    priority = models.CharField(max_length=50, default="Low")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -14,7 +14,7 @@ def add_task(request):
     if request.method == 'POST':
         priority = request.POST.get('priority')
         description = request.POST.get('description')
-        status = request.POST.get('status') == 'on'
+        status = request.POST.get('status')
         task = TodoList(priority=priority, description=description, status=status, user=request.user)
         task.save()
         return JsonResponse({'status': 'success', 'tasks': {

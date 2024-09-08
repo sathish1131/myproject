@@ -22,11 +22,19 @@
                     <form id="add-task-form" method="post">
                         {% csrf_token %}
                         <div class="mb-3">
+                            <label for="status">Status</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="Done">Done</option>
+                                <option value="Progress">Progress</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label for="priority">Priority</label>
                             <select name="priority" id="priority" class="form-control">
-                                <option value="1">High</option>
-                                <option value="2">Medium</option>
-                                <option value="3">low</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">low</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -52,13 +60,13 @@
             {% for task in tasks %}
             <tr>
                 <td>
-                    <input type="checkbox" value="{{ list.status }}">
+                    <button class="status-button">{{ task.status }}</button>
                 </td>
                 <td>
-                    <p>{{ list.task }}</p>
+                    <p>{{ task.description }}</p>
                 </td>
                 <td>
-                    <span>{{ list.priority }}</span>
+                    <button class="status-button">{{ task.priority }}</button>
                 </td>
                 <td>
                     <select name="action" id="todo-action">
@@ -79,6 +87,7 @@
             $.ajax({type: 'POST', 
                     url: '{% url "add_task" %}',
                     data: {
+                        'status': $('#status').val(),
                         'priority': $('#priority').val(),
                         'description': $('#description').val(),
                         'csrfmiddlewaretoken': '{{ csrf_token }}'
@@ -88,13 +97,13 @@
                             const task = response.tasks;
                             const row = `<tr>
                                 <td>
-                                    <input type="checkbox">
+                                    <button class="status-button">${task.status}</button>
                                 </td>
                                 <td>
                                     <p>${task.description}</p>
                                 </td>
                                 <td>
-                                    <span>${task.priority}</span>
+                                    <button class="status-button">${task.priority}</button>
                                 </td>
                                 <td>
                                     <select name="action" id="todo-action">
