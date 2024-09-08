@@ -26,10 +26,36 @@ def add_task(request):
     return JsonResponse({'status': 'error'}, status=400)
 
 def edit_task(request, task_id):
-    pass
+    if(request.method == 'GET'):
+        task = get_object_or_404(TodoList, id=task_id)
+        return JsonResponse({
+            'task': {
+                'id': task.id,
+                'status': task.status,
+                'priority': task.priority,
+                'description': task.description
+            }
+        })
+    elif(request.method == 'POST'):
+        task = get_object_or_404(TodoList, id=task_id)
+        task.priority = request.POST.get('priority')
+        task.status = request.POST.get('status')
+        task.description = request.POST.get('description')
+        task.save()
+        return JsonResponse({
+            'task': {
+                'id': task.id,
+                'status': task.status,
+                'priority': task.priority,
+                'description': task.description
+            }
+        })
 
 
 
-def delete_task(request):
-    pass
+def delete_task(request, task_id):
+    if(request.method == 'POST'):
+        task = get_object_or_404(TodoList, id = task_id)
+        task.delete()
+        return JsonResponse({'success': True})
 

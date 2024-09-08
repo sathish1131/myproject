@@ -15,7 +15,6 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="addTaskModalLabel">Add New Task</h5>
                     <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -47,6 +46,62 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" tabindex="-1" id="editTaskModal" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+                    <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-task-form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" id="edit-task-id">
+                        <div class="mb-3">
+                            <label for="edit-status">Status</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="Pending">Pending</option>
+                                <option value="Progress">Progress</option>
+                                <option value="Done">Done</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-priority">Priority</label>
+                            <select name="priority" id="priority" class="form-control"> 
+                                <option value="Low">low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-description">Description</label>
+                            <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="update-button">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="deleteTaskModal" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteTaskModalLabel">Delete Task</h5>
+                    <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Confirm Delete Task</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="update-button" type="button" data-bs-dismiss="modal">Cancel</button>
+                    <button class="update-button" type="button" id="confirm-delete" style="background-color: red;">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <table id="task-table" class="todo-grid">
         <thead>
             <tr>
@@ -69,10 +124,12 @@
                     <button class="status-button">{{ task.priority }}</button>
                 </td>
                 <td>
-                    <select name="action" id="todo-action">
-                        <option value="edit">Edit</option>
-                        <option value="delete">Delete</option>
-                    </select>
+                    <a href="#" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#editTaskModal">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="#" class="btn btn-link ml-2" data-bs-toggle="modal" data-bs-target="#deleteTaskModal">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </td>
             </tr>
             {% endfor %}
@@ -123,6 +180,64 @@
                         alert('Error adding task');
                     }
             });
+        });
+    });
+    let currentTaskId;
+    $('#edit-btn').on('click', function(){
+        currentTaskId = $(this).data('task-id');
+        $.ajax({
+            url: `/task-edit/${currentTaskId}/`,
+            method: 'GET',
+            success: function(response){
+                $('#edit-priority').val(response.task.priority);
+                $('#edit-status').val(response.task.status);
+                $('#edit-description').val(response.task.description);
+                $('#edit-task-id').val(response.task.id);
+                $('#editTaskModal').modal('show');
+            }
+        });
+    });
+    $('#edit-task-form').on('submit', function(event){
+        event.preventDefault();
+        $.ajax({
+            url: `/task-edit/${currentTaskId}/`,
+            method: 'POST',
+            data: {
+                'priority': $('#edit-priority').val(),
+                'status': $('#edit-status').val(),
+                'description': $('#edit-description').val(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response){
+                $('#editTaskModal').modal('hide');
+                let row = $(`button[data-task-id="${currentTaskId}"]`).closest('tr');
+                row.find('td:eq(0)').text(response.task.status);
+                row.find('td:eq(1)').text(response.task.priority);
+                row.find('td:eq(2)').text(response.task.description);
+            },
+            error: function(response){
+                alert('Error editing task');
+            }
+        });
+    });
+    $('#delete-btn').on('click', function(){
+        currentTaskId = $(this).data('task-id');
+        $('#deleteTaskModal').modal('show');
+    });
+    $('#confirm-delete').on('click', function(){
+        $.ajax({
+            url: `/task-delete/${currentTaskId}/`,
+            method: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response){
+                $('#deleteTaskModal').modal('hide');
+                $(`button[data-task-id="${currentTaskId}"]`).closest('tr').remove();
+            },
+            error: function(response){
+                alert('Error deleting task');
+            }
         });
     });
 </script>
