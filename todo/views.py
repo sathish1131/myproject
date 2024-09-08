@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import TodoList
 
@@ -13,8 +13,23 @@ def todo(request):
 def add_task(request):
     if request.method == 'POST':
         priority = request.POST.get('priority')
-        task = request.POST.get('description')
+        description = request.POST.get('description')
         status = request.POST.get('status') == 'on'
-        TodoList.objects.create(priority=priority, task=task, status=status, user=request.user)
-        return JsonResponse({'message': 'Task added successfully'}, status=200)
-    return JsonResponse({'error': 'Invalid Request'}, status=400)
+        task = TodoList(priority=priority, description=description, status=status, user=request.user)
+        task.save()
+        return JsonResponse({'status': 'success', 'tasks': {
+            'id': task.id,
+            'priority': task.priority,
+            'description': task.description,
+            'status': task.status
+        }})
+    return JsonResponse({'status': 'error'}, status=400)
+
+def edit_task(request, task_id):
+    pass
+
+
+
+def delete_task(request):
+    pass
+

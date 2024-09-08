@@ -38,7 +38,7 @@
             </div>
         </div>
     </div>
-    <table class="todo-grid">
+    <table id="task-table" class="todo-grid">
         <thead>
             <tr>
                 <th>Status</th>
@@ -70,7 +70,7 @@
         </tbody>
     </table> 
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>
     $(document).ready(function(){
         $('#add-task-form').on('submit', function(event){
@@ -78,20 +78,43 @@
             $.ajax({type: 'POST', 
                     url: '{% url "add_task" %}',
                     data: {
-                        'priority': $('$priority').val(),
-                        'description': $('$description').val(),
+                        'priority': $('#priority').val(),
+                        'description': $('#description').val(),
                         'csrfmiddlewaretoken': '{{ csrf_token }}'
                     },
                     success: function(response){
-                        $('#addTaskModal').modal('hide');
-                        $('#add-task-form')[0].reset();
+                        if(response.status == 'success'){
+                            const task = response.tasks;
+                            const row = `<tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td>
+                                    <p>${task.description}</p>
+                                </td>
+                                <td>
+                                    <span>${task.priority}</span>
+                                </td>
+                                <td>
+                                    <select name="action" id="todo-action">
+                                        <option value="edit">Edit</option>
+                                        <option value="delete">Delete</option>
+                                    </select>
+                                </td>
+                            </tr>`;
+                            $('#task-table tbody').append(row);
+                            $('#addTaskModal').modal('hide');
+                            $('#add-task-form')[0].reset();
+                        }else{
+                            alert('Error adding task');
+                        }
                     },
                     error: function(response){
                         alert('Error adding task');
                     }
-            })
-        })
-    })
+            });
+        });
+    });
 </script>
 
 {% endblock %}
