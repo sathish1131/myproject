@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import TodoList
+import json
 
 # Create your views here.
 
@@ -18,7 +19,7 @@ def add_task(request):
         task = TodoList(priority=priority, description=description, status=status, user=request.user)
         task.save()
         return JsonResponse({'status': 'success', 'tasks': {
-            'id': task.id,
+            'task_id': task.id,
             'priority': task.priority,
             'description': task.description,
             'status': task.status
@@ -26,36 +27,21 @@ def add_task(request):
     return JsonResponse({'status': 'error'}, status=400)
 
 def edit_task(request, task_id):
-    if(request.method == 'GET'):
-        task = get_object_or_404(TodoList, id=task_id)
-        return JsonResponse({
-            'task': {
-                'id': task.id,
-                'status': task.status,
-                'priority': task.priority,
-                'description': task.description
-            }
-        })
-    elif(request.method == 'POST'):
-        task = get_object_or_404(TodoList, id=task_id)
-        task.priority = request.POST.get('priority')
-        task.status = request.POST.get('status')
-        task.description = request.POST.get('description')
-        task.save()
-        return JsonResponse({
-            'task': {
-                'id': task.id,
-                'status': task.status,
-                'priority': task.priority,
-                'description': task.description
-            }
-        })
+    pass
 
 
 
-def delete_task(request, task_id):
+def delete_task(request):
     if(request.method == 'POST'):
-        task = get_object_or_404(TodoList, id = task_id)
-        task.delete()
-        return JsonResponse({'success': True})
+        try:
+            data = json.loads(request.body)
+            task_id = data.get('task_id')
+            if not task_id:
+                return JsonResponse({'success': False, 'error': 'Task Id is Missing'}, status=400)
+            task = get_object_or_404(TodoList, id= task_id)
+            task.delete()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    return JsonResponse({'success': False, 'error': 'Invalid Request Method'}, status=405)
 

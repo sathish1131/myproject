@@ -23,17 +23,17 @@
                         <div class="mb-3">
                             <label for="status">Status</label>
                             <select name="status" id="status" class="form-control">
-                                <option value="Done">Done</option>
-                                <option value="Progress">Progress</option>
                                 <option value="Pending">Pending</option>
+                                <option value="Progress">Progress</option>
+                                <option value="Done">Done</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="priority">Priority</label>
                             <select name="priority" id="priority" class="form-control">
-                                <option value="High">High</option>
-                                <option value="Medium">Medium</option>
                                 <option value="Low">low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -55,9 +55,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="edit-task-form" method="post">
+                    <form id="edit-task-form" method="post" action="">
                         {% csrf_token %}
-                        <input type="hidden" id="edit-task-id">
+                        <input type="hidden" name="task_id" id="edit-task-id">
                         <div class="mb-3">
                             <label for="edit-status">Status</label>
                             <select name="status" id="status" class="form-control">
@@ -68,7 +68,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="edit-priority">Priority</label>
-                            <select name="priority" id="priority" class="form-control"> 
+                            <select name="priority" id="priority" class="form-control">
                                 <option value="Low">low</option>
                                 <option value="Medium">Medium</option>
                                 <option value="High">High</option>
@@ -84,7 +84,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" id="deleteTaskModal" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+    <div class="modal fade" tabindex="-1" id="deleteTaskModal" aria-labelledby="deleteTaskModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -93,11 +94,16 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Confirm Delete Task</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="update-button" type="button" data-bs-dismiss="modal">Cancel</button>
-                    <button class="update-button" type="button" id="confirm-delete" style="background-color: red;">Delete</button>
+                    <form action="" method="post" id="delete-task-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="task_id" id="delete-task-id">
+                        <p>Confirm Delete Task</p>
+                        <div class="modal-footer">
+                            <button class="update-button" type="button" data-bs-dismiss="modal">Cancel</button>
+                            <button class="update-button" type="submit" id="confirm-delete"
+                                style="background-color: red;">Delete</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -113,7 +119,7 @@
         </thead>
         <tbody>
             {% for task in tasks %}
-            <tr>
+            <tr id="row-{{ task.id }}">
                 <td>
                     <button class="status-button">{{ task.status }}</button>
                 </td>
@@ -124,35 +130,39 @@
                     <button class="status-button">{{ task.priority }}</button>
                 </td>
                 <td style="display:flex; align-items:center;">
-                    <a href="#" class="btn btn-link" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#editTaskModal">
+                    <a href="#" class="btn btn-link" data-bs-toggle="modal" style="margin-right:10px;text-align:center;"
+                        data-bs-target="#editTaskModal" data-task-id="{{ task.id }}" id="edit-btn">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <a href="#" class="btn btn-link ml-2" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#deleteTaskModal">
+                    <a href="#" class="btn btn-link ml-2" data-bs-toggle="modal" id="delete-btn"
+                        style="margin-right:10px;text-align:center;" data-bs-target="#deleteTaskModal"
+                        data-task-id="{{ task.id }}">
                         <i class="fas fa-trash"></i>
                     </a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
-    </table> 
+    </table>
 </div>
 <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>
-    $(document).ready(function(){
-        $('#add-task-form').on('submit', function(event){
+    $(document).ready(function () {
+        $('#add-task-form').on('submit', function (event) {
             event.preventDefault();
-            $.ajax({type: 'POST', 
-                    url: '{% url "add_task" %}',
-                    data: {
-                        'status': $('#status').val(),
-                        'priority': $('#priority').val(),
-                        'description': $('#description').val(),
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function(response){
-                        if(response.status == 'success'){
-                            const task = response.tasks;
-                            const row = `<tr>
+            $.ajax({
+                type: 'POST',
+                url: '{% url "add_task" %}',
+                data: {
+                    'status': $('#status').val(),
+                    'priority': $('#priority').val(),
+                    'description': $('#description').val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    if (response.status == 'success') {
+                        const task = response.tasks;
+                        const row = `<tr id="row-${task.task_id}">
                                 <td>
                                     <button class="status-button">${task.status}</button>
                                 </td>
@@ -163,82 +173,52 @@
                                     <button class="status-button">${task.priority}</button>
                                 </td>
                                 <td style="display:flex; align-items:center;">
-                                    <a href="#" class="btn btn-link" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#editTaskModal">
+                                    <a href="#" class="btn btn-link" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#editTaskModal" data-task-id="${task.task_id}">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="#" class="btn btn-link ml-2" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#deleteTaskModal">
+                                    <a href="#" id="delete-btn" class="btn btn-link ml-2" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#deleteTaskModal" data-task-id="${task.task_id}">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>`;
-                            $('#task-table tbody').append(row);
-                            $('#addTaskModal').modal('hide');
-                            $('#add-task-form')[0].reset();
-                        }else{
-                            alert('Error adding task');
-                        }
-                    },
-                    error: function(response){
+                        $('#task-table tbody').append(row);
+                        $('#add-task-form')[0].reset();
+                        location.reload();
+                    } else {
                         alert('Error adding task');
                     }
+                },
+                error: function (response) {
+                    alert('Error adding task');
+                }
             });
         });
-    });
-    let currentTaskId;
-    $('#edit-btn').on('click', function(){
-        currentTaskId = $(this).data('id');
-        $.ajax({
-            url: `/task-edit/${currentTaskId}/`,
-            method: 'GET',
-            success: function(response){
-                $('#edit-priority').val(response.task.priority);
-                $('#edit-status').val(response.task.status);
-                $('#edit-description').val(response.task.description);
-                $('#edit-task-id').val(response.task.id);
-                $('#editTaskModal').modal('show');
-            }
+        let deleteTaskId = null;
+        $('#delete-btn').on('click', function(event){
+            event.preventDefault();
+            deleteTaskId = $(this).closest('#delete-btn').data('task-id');
+            console.log(`Delete task id ${deleteTaskId}`);
         });
-    });
-    $('#edit-task-form').on('submit', function(event){
-        event.preventDefault();
-        $.ajax({
-            url: `/task-edit/${currentTaskId}/`,
-            method: 'POST',
-            data: {
-                'priority': $('#edit-priority').val(),
-                'status': $('#edit-status').val(),
-                'description': $('#edit-description').val(),
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response){
-                $('#editTaskModal').modal('hide');
-                let row = $(`button[data-task-id="${currentTaskId}"]`).closest('tr');
-                row.find('td:eq(0)').text(response.task.status);
-                row.find('td:eq(1)').text(response.task.priority);
-                row.find('td:eq(2)').text(response.task.description);
-            },
-            error: function(response){
-                alert('Error editing task');
-            }
-        });
-    });
-    $('#delete-btn').on('click', function(){
-        currentTaskId = $(this).data('id');
-        $('#deleteTaskModal').modal('show');
-    });
-    $('#confirm-delete').on('click', function(){
-        $.ajax({
-            url: `/task-delete/${currentTaskId}/`,
-            method: 'POST',
-            data: {
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response){
-                $('#deleteTaskModal').modal('hide');
-                $(`button[data-task-id="${currentTaskId}"]`).closest('tr').remove();
-            },
-            error: function(response){
-                alert('Error deleting task');
+        $('#confirm-delete').on('click', function(){
+            console.log(`Confirm Delete task id ${deleteTaskId}`);
+            if(deleteTaskId){
+                $.ajax({
+                    url: '{% url "delete_task" %}',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify({ task_id: deleteTaskId }),
+                    success: function(response){
+                        if(response.success){
+                            $(`tr[id="row-${deleteTaskId}"]`).remove();
+                            location.reload();
+                        }else{
+                            alert('Failed to delete the task: '+ response.error);
+                        }
+                    }
+                });
             }
         });
     });
