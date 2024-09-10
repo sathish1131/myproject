@@ -96,10 +96,10 @@
                 <div class="modal-body">
                     <form action="" method="post" id="delete-task-form">
                         {% csrf_token %}
-                        <input type="hidden" name="task_id" id="delete-task-id">
                         <p>Confirm Delete Task</p>
                         <div class="modal-footer">
-                            <button class="update-button" type="button" data-bs-dismiss="modal">Cancel</button>
+                            <button class="update-button" type="button" data-bs-dismiss="modal"
+                                id="cancel-delete">Cancel</button>
                             <button class="update-button" type="submit" id="confirm-delete"
                                 style="background-color: red;">Delete</button>
                         </div>
@@ -130,14 +130,13 @@
                     <button class="status-button">{{ task.priority }}</button>
                 </td>
                 <td style="display:flex; align-items:center;">
-                    <a href="#" class="btn btn-link" data-bs-toggle="modal" style="margin-right:10px;text-align:center;"
-                        data-bs-target="#editTaskModal" data-task-id="{{ task.id }}" id="edit-btn">
-                        <i class="fas fa-edit"></i>
+                    <a href="#" class="btn btn-link" style="margin-right:10px;text-align:center;"
+                        data-task-id="{{ task.id }}" id="edit-btn">
+                        <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
                     </a>
-                    <a href="#" class="btn btn-link ml-2" data-bs-toggle="modal" id="delete-btn"
-                        style="margin-right:10px;text-align:center;" data-bs-target="#deleteTaskModal"
-                        data-task-id="{{ task.id }}">
-                        <i class="fas fa-trash"></i>
+                    <a href="#" class="btn btn-link ml-2"  id="delete-btn"
+                        style="margin-right:10px;text-align:center;" data-task-id="{{ task.id }}">
+                        <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteTaskModal"></i>
                     </a>
                 </td>
             </tr>
@@ -173,11 +172,11 @@
                                     <button class="status-button">${task.priority}</button>
                                 </td>
                                 <td style="display:flex; align-items:center;">
-                                    <a href="#" class="btn btn-link" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#editTaskModal" data-task-id="${task.task_id}">
-                                        <i class="fas fa-edit"></i>
+                                    <a href="#" class="btn btn-link"  style="margin-right:10px;text-align:center;" data-task-id="${task.task_id}">
+                                        <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
                                     </a>
-                                    <a href="#" id="delete-btn" class="btn btn-link ml-2" data-bs-toggle="modal" style="margin-right:10px;text-align:center;" data-bs-target="#deleteTaskModal" data-task-id="${task.task_id}">
-                                        <i class="fas fa-trash"></i>
+                                    <a href="#" id="delete-btn" class="btn btn-link ml-2" style="margin-right:10px;text-align:center;" data-task-id="${task.task_id}">
+                                        <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteTaskModal" ></i>
                                     </a>
                                 </td>
                             </tr>`;
@@ -194,14 +193,12 @@
             });
         });
         let deleteTaskId = null;
-        $('#delete-btn').on('click', function(event){
+        $('#delete-btn i').on('click', function (event) {
             event.preventDefault();
             deleteTaskId = $(this).closest('#delete-btn').data('task-id');
-            console.log(`Delete task id ${deleteTaskId}`);
         });
-        $('#confirm-delete').on('click', function(){
-            console.log(`Confirm Delete task id ${deleteTaskId}`);
-            if(deleteTaskId){
+        $('#confirm-delete').on('click', function () {
+            if (deleteTaskId) {
                 $.ajax({
                     url: '{% url "delete_task" %}',
                     method: 'POST',
@@ -210,12 +207,11 @@
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify({ task_id: deleteTaskId }),
-                    success: function(response){
-                        if(response.success){
+                    success: function (response) {
+                        if (response.success) {
                             $(`tr[id="row-${deleteTaskId}"]`).remove();
-                            location.reload();
-                        }else{
-                            alert('Failed to delete the task: '+ response.error);
+                        } else {
+                            alert('Failed to delete the task: ' + response.error);
                         }
                     }
                 });

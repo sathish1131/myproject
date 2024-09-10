@@ -26,7 +26,7 @@ def add_task(request):
         }})
     return JsonResponse({'status': 'error'}, status=400)
 
-def edit_task(request, task_id):
+def edit_task(request):
     pass
 
 
