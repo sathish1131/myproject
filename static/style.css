@@ -239,7 +239,7 @@ td {
 }
 
 thead {
-    background-color: lightgrey;
+    background-color: #b0b0b0;
 }
 
 th {
@@ -252,6 +252,7 @@ th {
 .todo-grid th:nth-child(1), .todo-grid td:nth-child(1) {
     justify-content: center;
     text-align: center;
+    vertical-align: middle;
     width: 150px;
 }
 
@@ -260,17 +261,20 @@ th {
     width: 500px;
     font-weight: bolder;
     align-items: center;
+    vertical-align: middle;
     line-height: normal;
 }
 
 .todo-grid th:nth-child(3), .todo-grid td:nth-child(3) {
     justify-content: center;
     text-align: center;
+    vertical-align: middle;
     width: 150px;
 }
 
 .todo-grid th:nth-child(4), .todo-grid td:nth-child(4) {
     width: 100px;
+    vertical-align: middle;
 }
 
 .add-button {
@@ -310,8 +314,33 @@ th {
     justify-content: center;
     text-align: center;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 6px;
     line-height: normal;
+    border: none;
+}
+
+.status-button.pending-status {
+    background-color: #ffeb3b;
+}
+
+.status-button.progress-status {
+    background-color: #ff9800;
+}
+
+.status-button.done-status {
+    background-color: #8bc34a;
+}
+
+.status-button.low-priority {
+    background-color: #ffeb3b;
+}
+
+.status-button.medium-priority {
+    background-color: #ff9800;
+}
+
+.status-button.high-priority {
+    background-color: #f44336;
 }
 
 .update-button {

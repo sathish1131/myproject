@@ -23,17 +23,17 @@
                         <div class="mb-3">
                             <label for="status">Status</label>
                             <select name="status" id="status" class="form-control">
-                                <option value="Pending">Pending</option>
-                                <option value="Progress">Progress</option>
-                                <option value="Done">Done</option>
+                                <option value="pending">pending</option>
+                                <option value="progress">progress</option>
+                                <option value="done">done</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="priority">Priority</label>
                             <select name="priority" id="priority" class="form-control">
-                                <option value="Low">low</option>
-                                <option value="Medium">Medium</option>
-                                <option value="High">High</option>
+                                <option value="low">low</option>
+                                <option value="medium">medium</option>
+                                <option value="high">high</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -61,17 +61,17 @@
                         <div class="mb-3">
                             <label for="edit-status">Status</label>
                             <select name="status" id="edit-status" class="form-control">
-                                <option value="Pending">Pending</option>
-                                <option value="Progress">Progress</option>
-                                <option value="Done">Done</option>
+                                <option value="pending">pending</option>
+                                <option value="progress">progress</option>
+                                <option value="done">done</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="edit-priority">Priority</label>
                             <select name="priority" id="edit-priority" class="form-control">
-                                <option value="Low">low</option>
-                                <option value="Medium">Medium</option>
-                                <option value="High">High</option>
+                                <option value="low">low</option>
+                                <option value="medium">medium</option>
+                                <option value="high">high</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -119,15 +119,15 @@
         </thead>
         <tbody>
             {% for task in tasks %}
-            <tr id="row-{{ task.id }}">
+            <tr id="row-{{ task.id }}" style="background-color: #d3d3d3;">
                 <td>
-                    <button class="status-button">{{ task.status }}</button>
+                    <button class="status-button {{ task.status }}-status">{{ task.status }}</button>
                 </td>
                 <td>
                     <p>{{ task.description }}</p>
                 </td>
                 <td>
-                    <button class="status-button">{{ task.priority }}</button>
+                    <button class="status-button {{ task.priority }}-priority">{{ task.priority }}</button>
                 </td>
                 <td style="display:flex; align-items:center;">
                     <a href="#" class="btn btn-link" style="margin-right:10px;text-align:center;"
@@ -161,15 +161,15 @@
                 success: function (response) {
                     if (response.status == 'success') {
                         const task = response.tasks;
-                        const row = `<tr id="row-${task.task_id}">
+                        const row = `<tr id="row-${task.task_id}" style="background-color: #d3d3d3;">
                                         <td>
-                                            <button class="status-button">${task.status}</button>
+                                            <button class="status-button ${task.status}-status">${task.status}</button>
                                         </td>
                                         <td>
                                             <p>${task.description}</p>
                                         </td>
                                         <td>
-                                            <button class="status-button">${task.priority}</button>
+                                            <button class="status-button ${task.priority}-priority">${task.priority}</button>
                                         </td>
                                         <td style="display:flex; align-items:center;">
                                             <a href="#" id="edit-btn" class="btn btn-link"  style="margin-right:10px;text-align:center;" data-task-id="${task.task_id}">
