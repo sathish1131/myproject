@@ -60,7 +60,7 @@
                         <input type="hidden" name="task_id" id="edit-task-id">
                         <div class="mb-3">
                             <label for="edit-status">Status</label>
-                            <select name="status" id="status" class="form-control">
+                            <select name="status" id="edit-status" class="form-control">
                                 <option value="Pending">Pending</option>
                                 <option value="Progress">Progress</option>
                                 <option value="Done">Done</option>
@@ -68,7 +68,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="edit-priority">Priority</label>
-                            <select name="priority" id="priority" class="form-control">
+                            <select name="priority" id="edit-priority" class="form-control">
                                 <option value="Low">low</option>
                                 <option value="Medium">Medium</option>
                                 <option value="High">High</option>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="edit-description">Description</label>
-                            <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                            <textarea name="description" id="edit-description" class="form-control" rows="3"></textarea>
                         </div>
                         <button type="submit" class="update-button">Save Changes</button>
                     </form>
@@ -134,8 +134,8 @@
                         data-task-id="{{ task.id }}" id="edit-btn">
                         <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
                     </a>
-                    <a href="#" class="btn btn-link ml-2"  id="delete-btn"
-                        style="margin-right:10px;text-align:center;" data-task-id="{{ task.id }}">
+                    <a href="#" class="btn btn-link ml-2" id="delete-btn" style="margin-right:10px;text-align:center;"
+                        data-task-id="{{ task.id }}">
                         <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteTaskModal"></i>
                     </a>
                 </td>
@@ -162,24 +162,24 @@
                     if (response.status == 'success') {
                         const task = response.tasks;
                         const row = `<tr id="row-${task.task_id}">
-                                <td>
-                                    <button class="status-button">${task.status}</button>
-                                </td>
-                                <td>
-                                    <p>${task.description}</p>
-                                </td>
-                                <td>
-                                    <button class="status-button">${task.priority}</button>
-                                </td>
-                                <td style="display:flex; align-items:center;">
-                                    <a href="#" class="btn btn-link"  style="margin-right:10px;text-align:center;" data-task-id="${task.task_id}">
-                                        <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
-                                    </a>
-                                    <a href="#" id="delete-btn" class="btn btn-link ml-2" style="margin-right:10px;text-align:center;" data-task-id="${task.task_id}">
-                                        <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteTaskModal" ></i>
-                                    </a>
-                                </td>
-                            </tr>`;
+                                        <td>
+                                            <button class="status-button">${task.status}</button>
+                                        </td>
+                                        <td>
+                                            <p>${task.description}</p>
+                                        </td>
+                                        <td>
+                                            <button class="status-button">${task.priority}</button>
+                                        </td>
+                                        <td style="display:flex; align-items:center;">
+                                            <a href="#" id="edit-btn" class="btn btn-link"  style="margin-right:10px;text-align:center;" data-task-id="${task.task_id}">
+                                                <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
+                                            </a>
+                                            <a href="#" id="delete-btn" class="btn btn-link ml-2" style="margin-right:10px;text-align:center;" data-task-id="${task.task_id}">
+                                                <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteTaskModal" ></i>
+                                            </a>
+                                        </td>
+                                    </tr>`;
                         $('#task-table tbody').append(row);
                         $('#add-task-form')[0].reset();
                         location.reload();
@@ -189,6 +189,49 @@
                 },
                 error: function (response) {
                     alert('Error adding task');
+                }
+            });
+        });
+        let editTaskId = null;
+        $('#edit-btn i').on('click', function (event) {
+            event.preventDefault();
+            editTaskId = $(this).closest('#edit-btn').data('task-id');
+            $.ajax({
+                type: 'GET',
+                url: '{% url "edit_task" %}',
+                data: { 'task_id': editTaskId },
+                success: function (response) {
+                    $('#edit-status').val(response.status);
+                    $('#edit-priority').val(response.priority);
+                    $('#edit-description').val(response.description);
+                },
+                error: function (error) {
+                    alert('Failed to fetch task details');
+                }
+            });
+        });
+        $('#edit-task-form').on('submit', function (event) {
+            event.preventDefault();
+            let status = $('#edit-status').val();
+            let priority = $('#edit-priority').val();
+            let description = $('#edit-description').val();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "edit_task" %}',
+                data: {
+                    'task_id': editTaskId,
+                    'status': status,
+                    'priority': priority,
+                    'description': description,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $('#editTaskModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert('Failed to update task');
+                    }
                 }
             });
         });
@@ -217,7 +260,7 @@
                 });
             }
         });
-    });
+    });     
 </script>
 
 {% endblock %}
