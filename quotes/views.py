@@ -30,14 +30,16 @@ def load_quotes(request):
 
 def get_random_quote(user):
     user_tags = UserTag.objects.filter(user=user).values_list('tag', flat=True)
-    if not user_tags:
-        return None
-    random_tag = random.choice(user_tags)
-
-    tag_quotes = Quote.objects.filter(tags__id = random_tag)
-    if not tag_quotes:
-        return None
-    random_quote = random.choice(tag_quotes)
+    all_quotes = Quote.objects.all()
+    random_quote = "empty quote"
+    if user_tags:
+        random_tag = random.choice(user_tags)
+        tag_quotes = Quote.objects.filter(tags__id = random_tag)
+        if tag_quotes:
+            random_quote = random.choice(tag_quotes)
+    else:
+        random_quote = random.choice(all_quotes)
+    
 
     return random_quote
 

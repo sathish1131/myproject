@@ -7,11 +7,14 @@
 
 <div class="quotes-layout">
    <div style="justify-content:right; text-align:right">
-        <button class="add-button" type="submit">Category</button>
+        <button class="category-button" type="submit">Category</button>
    </div>
-   <h1 style="font-size: 20px;">{{ quote.quote }}</h1>
-   <h1 style="font-size: 20px; text-align:right">{{ quote.author }}</h1>
-    
+   <div class="quotes-display">
+      <div class="quotes-text">
+         <p>{{ quote.quote }}</p>
+         <footer>{{ quote.author }}</footer>
+      </div>
+   </div>  
 </div>
 
 {% endblock %}
