@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import UserTag, Tag, Quote
 import random, json
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -34,17 +34,31 @@ def get_random_quote(user):
     random_quote = "empty quote"
     if user_tags:
         random_tag = random.choice(user_tags)
-        tag_quotes = Quote.objects.filter(tags__id = random_tag)
-        if tag_quotes:
-            random_quote = random.choice(tag_quotes)
+        if random_tag:
+            tag_quotes = Quote.objects.filter(tags__id = random_tag)
+            if tag_quotes:
+                random_quote = random.choice(tag_quotes)
+            else:
+                return ('Quotes not present for selected Category')
+        else:
+            return ('Categories not Correct')
     else:
         random_quote = random.choice(all_quotes)
     
-
     return random_quote
 
-
-
+def save_tags(request):
+    if request.method == 'POST':
+        selected_tags = request.POST.getlist('tags')
+        user = request.user
+        UserTag.objects.filter(user=user).delete()
+        for tag_name in selected_tags:
+            tag = Tag.objects.get(tag=tag_name)
+            usertag, created = UserTag.objects.update_or_create(user=user, tag=tag)
+            usertag.save()
+        return JsonResponse({'status': 'success'})
+    
 def quotes(request):
     quote = get_random_quote(request.user)
-    return render(request, 'quotes.html', {'quote': quote})
+    tags = Tag.objects.all()
+    return render(request, 'quotes.html', {'quote': quote, 'tags': tags})

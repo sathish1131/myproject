@@ -227,7 +227,6 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        $('#editTaskModal').modal('hide');
                         location.reload();
                     } else {
                         alert('Failed to update task');
@@ -254,7 +253,7 @@
                         if (response.success) {
                             $(`tr[id="row-${deleteTaskId}"]`).remove();
                         } else {
-                            alert('Failed to delete the task: ' + response.error);
+                            alert('Failed to delete the task');
                         }
                     }
                 });

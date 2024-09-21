@@ -111,6 +111,7 @@ h1 {
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
     background-color: rgba(255, 255, 255, 0.5);
     width: 30%;
+    padding: 5px 10px;
 }
 
 .account-module input {
@@ -120,6 +121,7 @@ h1 {
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.5);
     font-size: 20px;
+    padding: 5px 5px;
 }
 
 .navbar-container {
@@ -424,18 +426,14 @@ footer {
     color: darkblue;
 }
 
-.category-button {
-    transition-duration: 0.4s;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bolder;
+.tag-list {
+    max-height: 200px;
+    overflow-y: auto;
     font-size: 16px;
-    background-color: #ddd; 
-    color: darkblue;
-    padding: 4px 8px;
-    border-radius: 6px;  
+    line-height: 1.5;
 }
 
-.category-button:hover {
-    background-color: darkblue;
-    color: white;
+.tag-item {
+    display: block;
+    margin: 5px 0;
 }

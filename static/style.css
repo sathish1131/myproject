@@ -425,3 +425,15 @@ footer {
     text-align: right;
     color: darkblue;
 }
+
+.tag-list {
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.tag-item {
+    display: block;
+    margin: 5px 0;
+}

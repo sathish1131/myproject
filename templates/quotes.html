@@ -19,22 +19,15 @@
                </button>
             </div>
             <div class="modal-body">
-               <form id="add-tag-form" method="post">
-                  {% csrf_token %}
-                  <div class="mb-3">
-                     <label for="search">Search Categories</label>
-                     <input type="text" value="">
+                  <div class="mt-3">
+                     <input type="text" id="search-tags" class="form-control" placeholder="Search Categories...">
                   </div>
-                  <div class="mb-3">
-                     <label for="tags">Categories</label>
-                     <select name="tags" id="tags" class="form-control">
-                        <option value="low">low</option>
-                        <option value="medium">medium</option>
-                        <option value="high">high</option>
-                     </select>
+                  <div class="mt-3">
+                     <input type="checkbox" id="select-all"> Select All
                   </div>
-                  <button type="submit" class="add-button">Add Categories</button>
-               </form>
+                  <div id="tag-list" class="tag-list mt-3">
+                  </div>
+                  <button type="submit" class="add-button" id="add-categories">Add Categories</button>
             </div>
          </div>
       </div>
@@ -48,7 +41,67 @@
 </div>
 <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>
+   const colors = ['#F0E68C', '#D1C4E9', '#B2DFDB', '#FFCCBC', '#B3E5FC', '#FFABAB', '#C8E6C9', '#FFCC80', '#FFE0B2', '#E1BEE7', '#FFF9C4', '#B2DFDB', '#FF8A65', '#D7CCC8', '#F8BBD0'];
+   const tags = [ {% for tag in tags %}"{{ tag.tag }}"{% if not forloop.last %},{% endif %}{% endfor %} ];
 
+   function setQuoteBackgroundColour() {
+      const randomColour = colors[Math.floor(Math.random() * colors.length)];
+      $('.quotes-display').css('background-color', randomColour);
+   }
+
+   function displayTags(filteredTags) {
+      $('#tag-list').empty();
+      filteredTags.forEach(function (tag) {
+         $('#tag-list').append(`<div class="tag-item"><input type="checkbox" name="tags" value="${tag}"> ${tag}</div>`);
+      });
+   }
+
+   $(document).ready(function () {
+      setQuoteBackgroundColour();
+
+      $('#search-tags').on('input', function () {
+         let query = $(this).val().toLowerCase();
+         if (query) {
+            let filteredTags = tags.filter(tag => tag.toLowerCase().includes(query));
+            displayTags(filteredTags);
+         } else {
+            $('#tag-list').empty();
+         }
+      });
+
+      $('#select-all').change(function () {
+         let isChecked = $(this).is(':checked');
+         $('input[name="tags"]').prop('checked', isChecked);
+      });
+
+      $(document).on('change', 'input[name="tags"]', function () {
+         if (!$(this).is(':checked')) {
+            $('#select-all').prop('checked', false);
+         }
+      });
+
+      $('#add-categories').click(function(){
+         const selectedTags = [];
+         $('input[name="tags"]:checked').each(function(){
+            selectedTags.push($(this).val());
+         });
+         $.ajax({
+            type: 'POST',
+            url: '{% url "save_tags" %}',
+            data: {
+               'tags': selectedTags,
+               'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response){
+               $('#addTagModal').hide();
+               $('.modal-backdrop').remove();
+            },
+            error: function(){
+               alert('Failed to save categories')
+            }
+         });
+      });
+   });
 </script>
 
 {% endblock %}
