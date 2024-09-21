@@ -5,23 +5,34 @@
 }
 
 body {
-    display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     margin: 0;
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
+}
+
+.layout {
+    display: flex;
+    flex-direction: column;
     padding: 30px;
 }
 
+.app-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .calculator {
+    flex-direction: column;
+    justify-content: center;
     border: 2px solid #333;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     background-color: #fff;
-    width: 320px;
-    margin-top: 50px;
+    width: 30%;
 }
 
 .calculator-screen {
@@ -99,7 +110,7 @@ h1 {
     border-radius: 6px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
     background-color: rgba(255, 255, 255, 0.5);
-    width: 320px;
+    width: 30%;
 }
 
 .account-module input {
@@ -107,23 +118,29 @@ h1 {
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
-    padding: 10px;
     background-color: rgba(255, 255, 255, 0.5);
     font-size: 20px;
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
+.navbar-container {
     background-color: rgba(0, 0, 0, 0);
-    padding: 10px;
-    align-items: center;
-    position: fixed;
-    top: 0;
+}
+
+nav {
+    display: flex;
     width: 100%;
 }
 
-.navbar a {
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul li a {
     margin: 0 20px;
     text-decoration: none;
     font-size: 24px;
@@ -139,7 +156,7 @@ h1 {
     padding: 5px 10px;
 }
 
-.navbar a:hover {
+nav ul li a:hover {
     background-color: #ddd;
     border-color: #222;
     padding: 5px 10px;
@@ -152,6 +169,7 @@ h1 {
 
 .user_greet {
     margin: 0 20px;
+    text-align: center;
     text-decoration: none;
     font-size: 24px;
     font-family: Arial, Helvetica, sans-serif;
@@ -166,7 +184,6 @@ h1 {
     grid-template-columns: repeat(3, 1fr);
     justify-content: center;
     gap: 30px;
-    margin-top: 100px;
 }
 
 .panel {
@@ -188,6 +205,7 @@ h1 {
 .panel h2 {
     margin-bottom: 20px;
     font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .panel p {
@@ -195,15 +213,9 @@ h1 {
     line-height: 1.5;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 100%) {
     .home-layout {
         grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 500px) {
-    .home-layout {
-        grid-template-columns: 1fr;
     }
 }
 
@@ -213,68 +225,76 @@ h1 {
 }
 
 .todo-layout {
-    width: 900px;
-    height: 500px;
+    width: 80%;
     overflow: auto;
     background-color: #ddd;
     border-radius: 4px;
     border: 1px solid  #333;
-    padding: 10px;
-    margin-top: 50px;
 }
 
 .todo-grid {
     width: 100%;
     border-collapse: collapse;
+    padding: 10px;
+    margin-top: 10px;
 }
 
 th {
     padding: 10px;
     text-align: center;
-}
-
-td {
-    padding: 10px;
-    text-align: left;
-}
-
-thead {
-    background-color: #b0b0b0;
-}
-
-th {
+    vertical-align: middle;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bolder;
     font-style: italic;
     color: darkblue;
 }
 
+td {
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+thead {
+    background-color: #b0b0b0;
+}
+
 .todo-grid th:nth-child(1), .todo-grid td:nth-child(1) {
     justify-content: center;
     text-align: center;
-    vertical-align: middle;
-    width: 150px;
+    width: 15%;
+}
+
+.todo-grid th:nth-child(2) {
+    justify-content: center;
+    text-align: center;
 }
 
 .todo-grid th:nth-child(2), .todo-grid td:nth-child(2) {
     display: flex;
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
+    overflow: auto;
     font-weight: bolder;
     align-items: center;
-    vertical-align: middle;
     line-height: normal;
+    white-space: nowrap;
+    scrollbar-width: none;
+    overflow: auto;
+}
+
+.todo-grid td:nth-child(2)::-webkit-scrollbar {
+    display: none;
 }
 
 .todo-grid th:nth-child(3), .todo-grid td:nth-child(3) {
     justify-content: center;
     text-align: center;
-    vertical-align: middle;
-    width: 150px;
+    width: 15%;
 }
 
 .todo-grid th:nth-child(4), .todo-grid td:nth-child(4) {
-    width: 100px;
-    vertical-align: middle;
+    width: 10%;
 }
 
 .add-button {
@@ -307,8 +327,7 @@ th {
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bolder;
     font-size: 14px;
-    width: 75px;
-    height: 25px;
+    width: 100%;
     color: #222;
     align-items: center;
     justify-content: center;
@@ -317,6 +336,7 @@ th {
     border-radius: 6px;
     line-height: normal;
     border: none;
+    box-sizing: border-box;
 }
 
 .status-button.pending-status {
@@ -362,12 +382,11 @@ th {
 .quotes-layout {
     display: flex;
     flex-direction: column;
-    width: 900px;
-    height: 400px;
+    width: 70%;
     border-radius: 6px;
     border: 1px solid  #333;
-    padding: 20px;
     background-color: #b0b0b0;
+    margin-top: 50px;
 }
 
 .quotes-display {

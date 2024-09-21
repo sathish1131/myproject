@@ -20,25 +20,43 @@
 </style>
 
 <body>
-    <div class="navbar">
-        <a href="/">Home</a>
-        <a href="{% url 'register' %}">Register</a>
-        <div class="nav-header">
-            <h1>{% block page_title %}Applications{% endblock %}</h1>
+    <div class="layout">
+        <div class="navbar-container">
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                </ul>
+                <ul>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                </ul>
+                <ul>
+                    <li>
+                        <div class="nav-header">
+                            <h1>{% block page_title %}Applications{% endblock %}</h1>
+                        </div>
+                    </li>
+                </ul>    
+                <ul>
+                    <li>
+                        <div>
+                            {% if user.is_authenticated %}
+                            <span class="user_greet" style="margin-right:15px;">Hi, {{ user.first_name }}</span>
+                            <a href="{% url 'logout' %}">Logout</a>
+                            {% else %}
+                            <a href="{% url 'login' %}">Login</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <div style="margin-left:auto; display:flex; align-items:center;">
-            {% if user.is_authenticated %}
-            <span class="user_greet" style="margin-right:15px;">Hi, {{ user.first_name }}</span>
-            <a href="{% url 'logout' %}">Logout</a>
-            {% else %}
-            <a href="{% url 'login' %}">Login</a>
-            {% endif %}
+        <div class="app-content">
+            {% block content %}
+    
+    
+            {% endblock %}
         </div>
     </div>
-    {% block content %}
-
-
-    {% endblock %}
     <script src="{% static 'bootstrap.bundle.js' %}"></script>
 </body>
 
