@@ -1,4 +1,5 @@
 {% extends 'background.html' %}
+{% load static %}
 
 {% block title %}Quotes{% endblock %}
 {% block page_title %}Quotes{% endblock %}
@@ -7,14 +8,47 @@
 
 <div class="quotes-layout">
    <div style="justify-content:right; text-align:right">
-        <button class="category-button" type="submit">Category</button>
+      <button class="add-button" type="button" data-bs-toggle="modal" data-bs-target="#addTagModal">Category</button>
+   </div>
+   <div class="modal fade" tabindex="-1" id="addTagModal" aria-labelledby="addTagModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="addTagModalLabel">Select Categories</h5>
+               <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+               </button>
+            </div>
+            <div class="modal-body">
+               <form id="add-tag-form" method="post">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                     <label for="search">Search Categories</label>
+                     <input type="text" value="">
+                  </div>
+                  <div class="mb-3">
+                     <label for="tags">Categories</label>
+                     <select name="tags" id="tags" class="form-control">
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                     </select>
+                  </div>
+                  <button type="submit" class="add-button">Add Categories</button>
+               </form>
+            </div>
+         </div>
+      </div>
    </div>
    <div class="quotes-display">
       <div class="quotes-text">
          <p>{{ quote.quote }}</p>
          <footer>{{ quote.author }}</footer>
       </div>
-   </div>  
+   </div>
 </div>
+<script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+<script>
+
+</script>
 
 {% endblock %}
