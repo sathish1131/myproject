@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('files', views.files, name= "files"),
-    path('savefiles/', views.save_files, name= "save_files"),
+    path('addfiles/', views.add_files, name= "add_files"),
+    path('addfolders/', views.add_folders, name= "add_folders"),
     path('deletefiles/', views.delete_files, name= "delete_files")
 ]
