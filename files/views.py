@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .models import File
 from django.http import JsonResponse
 from django.utils import timezone
 
