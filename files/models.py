@@ -8,4 +8,4 @@ class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default='')
     file = models.FileField(upload_to="files/")
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateTimeField()
