@@ -29,9 +29,9 @@ def load_quotes(request):
         print('Error Message', e)
 
 def get_random_quote(user):
-    user_tags = UserTag.objects.filter(user=user).values_list('tag', flat=True)
+    user_tags = UserTag.objects.filter(user=user).values_list('tag__id', flat=True)
     all_quotes = Quote.objects.all()
-    random_quote = "empty quote"
+    random_quote = "Failed to fetch quotes"
     if user_tags:
         random_tag = random.choice(user_tags)
         if random_tag:
@@ -49,16 +49,19 @@ def get_random_quote(user):
 
 def save_tags(request):
     if request.method == 'POST':
-        selected_tags = request.POST.getlist('tags')
+        selected_tags = request.POST.getlist('tags[]')
         user = request.user
         UserTag.objects.filter(user=user).delete()
         for tag_name in selected_tags:
-            tag = Tag.objects.get(tag=tag_name)
+            tag, created = Tag.objects.get_or_create(tag=tag_name)
+            tag.save()
             usertag, created = UserTag.objects.update_or_create(user=user, tag=tag)
             usertag.save()
         return JsonResponse({'status': 'success'})
     
 def quotes(request):
-    quote = get_random_quote(request.user)
+    user = request.user
+    quote = get_random_quote(user)
     tags = Tag.objects.all()
-    return render(request, 'quotes.html', {'quote': quote, 'tags': tags})
+    existing_tags = UserTag.objects.filter(user=user).values_list('tag__tag', flat=True)
+    return render(request, 'quotes.html', {'quote': quote, 'tags': tags, 'existing_tags': list(existing_tags)})

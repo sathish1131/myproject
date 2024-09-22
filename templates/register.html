@@ -19,7 +19,7 @@
     </form>
     <div>
         {% for message in messages %}
-        <p style="color: red;">{{message}}</p>
+        <p class="alert-{{ message.tags }}" style="color: red;">{{message}}</p>
         {% endfor %}
     </div>
     
