@@ -5,8 +5,22 @@
 
 {% block content %}
 
-<div class="home-layout">
-    
+<div class="grid-container">
+    <div class="note-tile add-note">
+        <i class="fas fa-plus"></i>
+    </div>
+    {% for note in notes %}
+    <div class="note-tile">
+        <div>
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="note-details">
+            <div class="note-name">TestL</div>
+            <div class="note-date">Last updated: {{ note.updated_at }}</div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
+
 
 {% endblock %}
