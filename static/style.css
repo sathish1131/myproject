@@ -211,7 +211,7 @@ nav ul li a:hover {
     color: darkblue;
     text-shadow: 4px 4px 10px darkblue;
     text-decoration: none;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: transform 0.3s, background-color 0.3s, border-color 0.3s;
 }
 
 .panel h2 {
@@ -232,6 +232,7 @@ nav ul li a:hover {
 }
 
 .panel:hover {
+    transform: scale(1.05);
     background-color: #ddd;
     border-color: #222;
 }
