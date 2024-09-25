@@ -47,7 +47,6 @@
    const existingTags = {{ existing_tags|safe }};
    let selectedTags = [];
    selectedTags = [...existingTags];
-   let selectedTagsLength = selectedTags.length;
 
    function setQuoteBackgroundColour() {
       const randomColour = colors[Math.floor(Math.random() * colors.length)];
@@ -96,33 +95,23 @@
          }
       });
 
-      $('#addTagModal').on('hidden.bs.modal', function(){
-         $('body').removeClass('modal-open');
-         $('.modal-backdrop').remove();
-         $('body').css('padding-right', '');
-      });
-
       $('#add-categories').click(function () {
-         if(selectedTags.length!==selectedTagsLength){
-            $.ajax({
-               type: 'POST',
-               url: '{% url "save_tags" %}',
-               data: $.param(
-                  {
-                     'tags[]': selectedTags,
-                     'csrfmiddlewaretoken': '{{ csrf_token }}'
-                  }
-               ),
-               success: function (response) {
-                  location.reload();
-               },
-               error: function () {
-                  alert('Failed to save categories')
+         $.ajax({
+            type: 'POST',
+            url: '{% url "save_tags" %}',
+            data: $.param(
+               {
+                  'tags[]': selectedTags,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}'
                }
-            });
-         }else{
-            $('#addTagModal').modal('hide');
-         }
+            ),
+            success: function (response) {
+               location.reload();
+            },
+            error: function () {
+               alert('Failed to save categories')
+            }
+         });
       });
    });
 </script>
