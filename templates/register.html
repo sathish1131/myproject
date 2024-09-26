@@ -5,24 +5,25 @@
 
 {% block content %}
 
-<div class="account-module">
-    <form action="register" method="post">
-        {% csrf_token %}
-        <h1>Registration</h1>
-        <input type="text" placeholder="First Name" name="firstname" required><br>
-        <input type="text" placeholder="Last Name" name="lastname"><br>
-        <input type="email" placeholder="Email" name="email" required><br>
-        <input type="text" placeholder="User Name" name="username" required><br>
-        <input type="password" placeholder="Password" name="password" required><br>
-        <input type="password" placeholder="Confirm Password" name="confirm_password" required><br>
-        <input type="submit" style="background-color: #f9a825;">
-    </form>
-    <div>
-        {% for message in messages %}
-        <p class="alert-{{ message.tags }}" style="color: red;">{{message}}</p>
-        {% endfor %}
+<div class="app-content">
+    <div class="account-module">
+        <form action="register" method="post">
+            {% csrf_token %}
+            <h1>Registration</h1>
+            <input type="text" placeholder="First Name" name="firstname" required><br>
+            <input type="text" placeholder="Last Name" name="lastname"><br>
+            <input type="email" placeholder="Email" name="email" required><br>
+            <input type="text" placeholder="User Name" name="username" required><br>
+            <input type="password" placeholder="Password" name="password" required><br>
+            <input type="password" placeholder="Confirm Password" name="confirm_password" required><br>
+            <input type="submit" style="background-color: #f9a825;">
+        </form>
+        <div>
+            {% for message in messages %}
+            <p class="alert-{{ message.tags }}" style="color: red;">{{message}}</p>
+            {% endfor %}
+        </div>  
     </div>
-    
 </div>
 
 {% endblock %}

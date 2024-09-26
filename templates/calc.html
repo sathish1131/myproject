@@ -4,32 +4,34 @@
 {% block page_title %}Calculator{% endblock %}
 
 {% block content %}
-<div class="calculator">
-    <form action="calculate" method="POST">
-        {% csrf_token %}
-        <input class="calculator-screen" type="text" name="expression" id="display" value="{{ result|default:'' }}">
-        <div class="calculator-buttons">
-            <button class="button double" type="button" onclick="clearDisplay()" id="ac">AC</button>
-            <button class="button" type="button" onclick="deleteDigit()" id="c">C</button>
-            <button class="button operator" type="button" onclick="appendValue('/')" id="divide">/</button>
-            <button class="button" type="button" onclick="appendValue('7')" id="7">7</button>
-            <button class="button" type="button" onclick="appendValue('8')" id="8">8</button>
-            <button class="button" type="button" onclick="appendValue('9')" id="9">9</button>
-            <button class="button operator" type="button" onclick="appendValue('*')" id="multiply">*</button>
-            <button class="button" type="button" onclick="appendValue('4')" id="4">4</button>
-            <button class="button" type="button" onclick="appendValue('5')" id="5">5</button>
-            <button class="button" type="button" onclick="appendValue('6')" id="6">6</button>
-            <button class="button operator" type="button" onclick="appendValue('-')" id="subtract">-</button>
-            <button class="button" type="button" onclick="appendValue('1')" id="1">1</button>
-            <button class="button" type="button" onclick="appendValue('2')" id="2">2</button>
-            <button class="button" type="button" onclick="appendValue('3')" id="3">3</button>
-            <button class="button operator" type="button" onclick="appendValue('+')" id="add">+</button>
-            <button class="button bottom-left-radius" type="button" onclick="appendValue('00')" id="00">00</button>
-            <button class="button" type="button" onclick="appendValue('0')" id="0">0</button>
-            <button class="button" type="button" onclick="appendValue('.')" id="decimal">.</button>
-            <button class="button operator bottom-right-radius" type="submit" id="equals">=</button>
-        </div>
-    </form>
+<div class="app-content">
+    <div class="calculator">
+        <form action="calculate" method="POST">
+            {% csrf_token %}
+            <input class="calculator-screen" type="text" name="expression" id="display" value="{{ result|default:'' }}">
+            <div class="calculator-buttons">
+                <button class="button double" type="button" onclick="clearDisplay()" id="ac">AC</button>
+                <button class="button" type="button" onclick="deleteDigit()" id="c">C</button>
+                <button class="button operator" type="button" onclick="appendValue('/')" id="divide">/</button>
+                <button class="button" type="button" onclick="appendValue('7')" id="7">7</button>
+                <button class="button" type="button" onclick="appendValue('8')" id="8">8</button>
+                <button class="button" type="button" onclick="appendValue('9')" id="9">9</button>
+                <button class="button operator" type="button" onclick="appendValue('*')" id="multiply">*</button>
+                <button class="button" type="button" onclick="appendValue('4')" id="4">4</button>
+                <button class="button" type="button" onclick="appendValue('5')" id="5">5</button>
+                <button class="button" type="button" onclick="appendValue('6')" id="6">6</button>
+                <button class="button operator" type="button" onclick="appendValue('-')" id="subtract">-</button>
+                <button class="button" type="button" onclick="appendValue('1')" id="1">1</button>
+                <button class="button" type="button" onclick="appendValue('2')" id="2">2</button>
+                <button class="button" type="button" onclick="appendValue('3')" id="3">3</button>
+                <button class="button operator" type="button" onclick="appendValue('+')" id="add">+</button>
+                <button class="button bottom-left-radius" type="button" onclick="appendValue('00')" id="00">00</button>
+                <button class="button" type="button" onclick="appendValue('0')" id="0">0</button>
+                <button class="button" type="button" onclick="appendValue('.')" id="decimal">.</button>
+                <button class="button operator bottom-right-radius" type="submit" id="equals">=</button>
+            </div>
+        </form>
+    </div>
 </div>
 <script>
     function clearDisplay(){

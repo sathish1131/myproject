@@ -6,36 +6,38 @@
 
 {% block content %}
 
-<div class="quotes-layout">
-   <div style="justify-content:right; text-align:right">
-      <button class="add-button" type="button" data-bs-toggle="modal" data-bs-target="#addTagModal">Add Category</button>
-   </div>
-   <div class="modal fade" tabindex="-1" id="addTagModal" aria-labelledby="addTagModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-               <h5 class="modal-title" id="addTagModalLabel">Select Categories</h5>
-               <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-               </button>
-            </div>
-            <div class="modal-body">
-               <div class="mt-3">
-                  <input type="text" id="search-tags" class="form-control" placeholder="Search Categories...">
+<div class="app-content">
+   <div class="quotes-layout">
+      <div style="justify-content:right; text-align:right">
+         <button class="add-button" type="button" data-bs-toggle="modal" data-bs-target="#addTagModal">Add Category</button>
+      </div>
+      <div class="modal fade" tabindex="-1" id="addTagModal" aria-labelledby="addTagModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="addTagModalLabel">Select Categories</h5>
+                  <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  </button>
                </div>
-               <div class="mt-3">
-                  <input type="checkbox" id="select-all"> Select All
+               <div class="modal-body">
+                  <div class="mt-3">
+                     <input type="text" id="search-tags" class="form-control" placeholder="Search Categories...">
+                  </div>
+                  <div class="mt-3">
+                     <input type="checkbox" id="select-all"> Select All
+                  </div>
+                  <div id="tag-list" class="tag-list mt-3">
+                  </div>
+                  <button type="submit" class="add-button" id="add-categories">Save Categories</button>
                </div>
-               <div id="tag-list" class="tag-list mt-3">
-               </div>
-               <button type="submit" class="add-button" id="add-categories">Save Categories</button>
             </div>
          </div>
       </div>
-   </div>
-   <div class="quotes-display">
-      <div class="quotes-text">
-         <p>{{ quote.quote }}</p>
-         <footer>{{ quote.author }}</footer>
+      <div class="quotes-display">
+         <div class="quotes-text">
+            <p>{{ quote.quote }}</p>
+            <footer>{{ quote.author }}</footer>
+         </div>
       </div>
    </div>
 </div>

@@ -5,21 +5,22 @@
 
 {% block content %}
 
-<div class="account-module">
-    <form action="login" method="post">
-        {% csrf_token %}
-        <h1>Login</h1>
-        <input type="text" placeholder="User Name" name="username" required><br>
-        <input type="password" placeholder="Password" name="password" required><br>
-        <input type="submit" style="background-color: #f9a825;"><br><br>
-        <a href="register" style="color:darkblue; display:flex; justify-content:center; align-items:center;">Create New Account</a>
-    </form>
-    <div></div>
-        {% for message in messages %}
-        <p class="alert-{{ message.tags }}" style="color: red;">{{message}}</p>
-        {% endfor %}
+<div class="app-content">
+    <div class="account-module">
+        <form action="login" method="post">
+            {% csrf_token %}
+            <h1>Login</h1>
+            <input type="text" placeholder="User Name" name="username" required><br>
+            <input type="password" placeholder="Password" name="password" required><br>
+            <input type="submit" style="background-color: #f9a825;"><br><br>
+            <a href="register" style="color:darkblue; display:flex; justify-content:center; align-items:center;">Create New Account</a>
+        </form>
+        <div></div>
+            {% for message in messages %}
+            <p class="alert-{{ message.tags }}" style="color: red;">{{message}}</p>
+            {% endfor %}
+        </div>
     </div>
 </div>
-
 
 {% endblock %}

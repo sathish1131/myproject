@@ -5,144 +5,147 @@
 {% block page_title %}Todo-List{% endblock %}
 
 {% block content %}
-<div class="todo-layout">
-    <div style="justify-content: right; text-align:right; padding: 10px 20px;">
-        <button type="button" class="add-button" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add Task</button>
-    </div>
-    <div class="modal fade" tabindex="-1" id="addTaskModal" aria-labelledby="addTaskModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addTaskModalLabel">Add New Task</h5>
-                    <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="add-task-form" method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="status">Status</label>
-                            <select name="status" id="status" class="form-control">
-                                <option value="pending">pending</option>
-                                <option value="progress">progress</option>
-                                <option value="done">done</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="priority">Priority</label>
-                            <select name="priority" id="priority" class="form-control">
-                                <option value="low">low</option>
-                                <option value="medium">medium</option>
-                                <option value="high">high</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description">Description</label>
-                            <textarea name="description" id="description" class="form-control" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="add-button">Add Task</button>
-                    </form>
+
+<div class="app-content">
+    <div class="todo-layout">
+        <div style="justify-content: right; text-align:right; padding: 10px 20px;">
+            <button type="button" class="add-button" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add Task</button>
+        </div>
+        <div class="modal fade" tabindex="-1" id="addTaskModal" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addTaskModalLabel">Add New Task</h5>
+                        <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add-task-form" method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="status">Status</label>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="pending">pending</option>
+                                    <option value="progress">progress</option>
+                                    <option value="done">done</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="priority">Priority</label>
+                                <select name="priority" id="priority" class="form-control">
+                                    <option value="low">low</option>
+                                    <option value="medium">medium</option>
+                                    <option value="high">high</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description">Description</label>
+                                <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="add-button">Add Task</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal fade" tabindex="-1" id="editTaskModal" aria-labelledby="editTaskModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
-                    <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="edit-task-form" method="post" action="">
-                        {% csrf_token %}
-                        <input type="hidden" name="task_id" id="edit-task-id">
-                        <div class="mb-3">
-                            <label for="edit-status">Status</label>
-                            <select name="status" id="edit-status" class="form-control">
-                                <option value="pending">pending</option>
-                                <option value="progress">progress</option>
-                                <option value="done">done</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit-priority">Priority</label>
-                            <select name="priority" id="edit-priority" class="form-control">
-                                <option value="low">low</option>
-                                <option value="medium">medium</option>
-                                <option value="high">high</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit-description">Description</label>
-                            <textarea name="description" id="edit-description" class="form-control" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="update-button">Save Changes</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" tabindex="-1" id="deleteTaskModal" aria-labelledby="deleteTaskModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteTaskModalLabel">Delete Task</h5>
-                    <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="" method="post" id="delete-task-form">
-                        {% csrf_token %}
-                        <p>Confirm Delete Task</p>
-                        <div class="modal-footer">
-                            <button class="update-button" type="button" data-bs-dismiss="modal"
-                                id="cancel-delete">Cancel</button>
-                            <button class="update-button" type="submit" id="confirm-delete"
-                                style="background-color: red;">Delete</button>
-                        </div>
-                    </form>
+        <div class="modal fade" tabindex="-1" id="editTaskModal" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+                        <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit-task-form" method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="task_id" id="edit-task-id">
+                            <div class="mb-3">
+                                <label for="edit-status">Status</label>
+                                <select name="status" id="edit-status" class="form-control">
+                                    <option value="pending">pending</option>
+                                    <option value="progress">progress</option>
+                                    <option value="done">done</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-priority">Priority</label>
+                                <select name="priority" id="edit-priority" class="form-control">
+                                    <option value="low">low</option>
+                                    <option value="medium">medium</option>
+                                    <option value="high">high</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-description">Description</label>
+                                <textarea name="description" id="edit-description" class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="update-button">Save Changes</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="modal fade" tabindex="-1" id="deleteTaskModal" aria-labelledby="deleteTaskModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteTaskModalLabel">Delete Task</h5>
+                        <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" id="delete-task-form">
+                            {% csrf_token %}
+                            <p>Confirm Delete Task</p>
+                            <div class="modal-footer">
+                                <button class="update-button" type="button" data-bs-dismiss="modal"
+                                    id="cancel-delete">Cancel</button>
+                                <button class="update-button" type="submit" id="confirm-delete"
+                                    style="background-color: red;">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="task-table" class="todo-grid">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Task Description</th>
+                    <th>Priority</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr id="row-{{ task.id }}" style="background-color: #d3d3d3;">
+                    <td>
+                        <button class="status-button {{ task.status }}-status">{{ task.status }}</button>
+                    </td>
+                    <td>
+                        <p>{{ task.description }}</p>
+                    </td>
+                    <td>
+                        <button class="status-button {{ task.priority }}-priority">{{ task.priority }}</button>
+                    </td>
+                    <td style="display:flex; align-items:center;">
+                        <a href="#" class="btn btn-link" style="margin-right:10px;text-align:center;"
+                            data-task-id="{{ task.id }}" id="edit-btn">
+                            <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
+                        </a>
+                        <a href="#" class="btn btn-link ml-2" id="delete-btn" style="margin-right:10px;text-align:center;"
+                            data-task-id="{{ task.id }}">
+                            <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteTaskModal"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    <table id="task-table" class="todo-grid">
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Task Description</th>
-                <th>Priority</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for task in tasks %}
-            <tr id="row-{{ task.id }}" style="background-color: #d3d3d3;">
-                <td>
-                    <button class="status-button {{ task.status }}-status">{{ task.status }}</button>
-                </td>
-                <td>
-                    <p>{{ task.description }}</p>
-                </td>
-                <td>
-                    <button class="status-button {{ task.priority }}-priority">{{ task.priority }}</button>
-                </td>
-                <td style="display:flex; align-items:center;">
-                    <a href="#" class="btn btn-link" style="margin-right:10px;text-align:center;"
-                        data-task-id="{{ task.id }}" id="edit-btn">
-                        <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
-                    </a>
-                    <a href="#" class="btn btn-link ml-2" id="delete-btn" style="margin-right:10px;text-align:center;"
-                        data-task-id="{{ task.id }}">
-                        <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteTaskModal"></i>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 </div>
 <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>

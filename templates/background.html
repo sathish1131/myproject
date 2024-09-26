@@ -44,12 +44,10 @@
                 </ul>
             </nav>
         </div>
-        <div class="app-content">
-            {% block content %}
+        {% block content %}
     
     
-            {% endblock %}
-        </div>
+        {% endblock %}
     </div>
     <script src="{% static 'bootstrap.bundle.js' %}"></script>
 </body>
