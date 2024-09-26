@@ -7,16 +7,16 @@
 {% block content %}
 
 <div class="grid-container">
-    <div class="note-tile add-note" data-bs-toggle="modal" data-bs-target="#noteModal">
+    <div class="note-tile add-note" data-bs-toggle="modal" data-bs-target="#noteModal" data-id="">
         <i class="fas fa-plus"></i>
     </div>
     {% for note in notes %}
-    <div class="note-tile" data-bs-toggle="modal" data-bs-target="#noteModal">
+    <div class="note-tile" data-bs-toggle="modal" data-bs-target="#noteModal" data-id="{{ note.id }}">
         <div>
             <i class="fas fa-file-alt"></i>
         </div>
         <div class="note-details">
-            <div class="note-name">TestL</div>
+            <div class="note-name">{{ note.name }}</div>
             <div class="note-date">Last updated: {{ note.updated_at }}</div>
         </div>
     </div>
@@ -27,7 +27,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <input type="text" id="name" class="form-control" placeholder="Note Name">
-                <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="close" class="btn-close" id="close-note" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
@@ -35,36 +35,92 @@
                         placeholder="Your Note Here..."></textarea>
                 </div>
             </div>
-            {% if true %}
             <div class="modal-footer">
+                <div>
+                    <button class="update-button" type="submit" id="confirm-delete"
+                            style="background-color: red;">Delete</button>
+                </div>
             </div>
-                <button class="update-button" type="submit" id="confirm-delete"
-                        style="background-color: red;">Delete</button>
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>
 <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>
     $(document).ready(function () {
+        let currentNoteId = null;
+        let intialNoteName, initialNoteContent;
         $('.note-tile').click(function () {
-            const noteId = $(this).data('id');
-            if (noteId) {
+            currentNoteId = $(this).data('id');
+            if (currentNoteId != "") {
                 $.ajax({
-                    url: '/get_note/',
-                    method: 'GET',
-                    data: { id: noteId },
-                    success: function (response) {
+                    type: 'GET',
+                    url: '{% url "get_note" %}',
+                    data: {
+                        id: currentNoteId
+                    },
+                    success: function(response){
                         $('#name').val(response.name);
-                        $('#content').val(response.note);
+                        $('#content').val(response.content);
+                        $('#confirm-delete').show();
+                        intialNoteName = response.name;
+                        initialNoteContent = response.content;
+                    },
+                    error: function(error){
+                        alert('Error while fetching the note');
                     }
-                });
+                }); 
             } else {
+                currentNoteId = null;
                 $('#name').val('');
                 $('#content').val('');
+                $('#confirm-delete').hide();
+                intialNoteName = '';
+                initialNoteContent = '';
             }
-            $('#noteModal').hide();
+        });
+
+        $('#close-note').on('click', function(){
+            const noteName = $('#name').val().trim();
+            const noteContent = $('#content').val().trim();
+            if(noteName != intialNoteName || noteContent != initialNoteContent){
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "save_note" %}',
+                    data: {
+                        id: currentNoteId,
+                        name: noteName,
+                        content: noteContent,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(response){
+                        if(response.status == 'success'){
+                            location.reload();
+                        }else{
+                            alert(response.message)
+                        }      
+                    },
+                    error: function(error){
+                        alert('Error while saving the note');
+                    }
+                });
+            }
+        });
+
+        $('#confirm-delete').on('click', function(){
+            $.ajax({
+                type: 'POST',
+                url: '{% url "delete_note" %}',
+                data: {
+                    id: currentNoteId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response){
+                    location.reload();
+                },
+                error: function(error){
+                    alert('Error while deleting the note');
+                }
+            });
         });
     });
 </script>
