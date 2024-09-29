@@ -57,6 +57,14 @@ def edit_folder(request):
     if request.method == 'POST':
         folder_id = request.POST.get('folder_id')
         folder_name = request.POST.get('folder_name')
+        parent_folder_id = request.POST.get('parent_folder_id')
+        if parent_folder_id == "":
+            parent_folder = None
+        else:
+            parent_folder = get_object_or_404(Folder, user=request.user, id=parent_folder_id)
+        filtered_folder = Folder.objects.filter(user=request.user, name=folder_name, parent_folder=parent_folder).exclude(id=folder_id)
+        if filtered_folder.exists():
+            return JsonResponse({'success': False, 'message': 'Folder name already exists'})
         folder = get_object_or_404(Folder, user=request.user, id=folder_id)
         folder.name = folder_name
         folder.save()
@@ -70,6 +78,8 @@ def add_folder(request):
             parent_folder = None
         else:
             parent_folder = get_object_or_404(Folder, user=request.user, id=parent_folder_id)
+        if Folder.objects.filter(user=request.user, name=folder_name, parent_folder=parent_folder).exists():
+            return JsonResponse({'success': False, 'message': 'Folder name already exists'})
         Folder.objects.create(user=request.user, name=folder_name, parent_folder=parent_folder)
         return JsonResponse({'success': True, 'message': 'Folder added successfully'})
     

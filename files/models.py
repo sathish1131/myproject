@@ -10,7 +10,9 @@ class Folder(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('name', 'user', 'parent_folder')
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'parent_folder', 'user'], name='unique_folder_name')
+        ]
 
     def __str__(self):
         return self.name
@@ -24,8 +26,9 @@ class File(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('name', 'user', 'parent_folder')
-    
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'parent_folder', 'user'], name='unique_file_name')
+        ]
     def __str__(self):
         return self.name
 
