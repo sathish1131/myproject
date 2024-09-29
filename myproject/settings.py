@@ -137,7 +137,7 @@ MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'myproject',
+    'CLOUD_NAME': 'duhmvvj7f',
     'API_KEY': '517469479332576',
     'API_SECRET': 'rfLjXDk_CFln16YN9f24ecBYPnk',
     'secure': True

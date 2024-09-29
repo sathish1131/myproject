@@ -6,22 +6,32 @@
 
 {% block content %}
 
-<div style="justify-content:right; text-align:right; margin-right: 30px;">
-    <button class="add-button" style="margin-right: 10px;" id="addFile" data-bs-toggle="modal" data-bs-target="#fileModal">Add File</button>
-    <button class="add-button" id="addFolder" data-bs-toggle="modal" data-bs-target="#fileModal">Add Folder</button>
+<div style="display:flex; justify-content:space-between;">
+    <div style="justify-content:left; text-align:left; margin-left:50px;">
+        <button class="add-button" id="back">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <button class="add-button" id="home" style="margin-left: 10px;">
+            <i class="fas fa-home"></i>
+        </button>
+    </div>
+    <div style="justify-content:right; text-align:right; margin-right: 30px;">
+        <button class="add-button" style="margin-right: 10px;" id="addFile" data-bs-toggle="modal" data-bs-target="#fileModal">Add File</button>
+        <button class="add-button" id="addFolder" data-bs-toggle="modal" data-bs-target="#addFolderModal">Add Folder</button>
+    </div>
 </div>
 <div class="grid-container">
     {% for folder in folders %}
-    <div class="file-tile" id="folder" data-id="{{ folder.id }}">
+    <div class="file-tile">
         <div class="tile-header">
             <a href="#" class="btn btn-link" data-id="{{ folder.id }}" id="editFolder">
-                <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#fileModal"></i>
+                <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editFolderModal"></i>
             </a>
             <a href="#" class="btn btn-link ml-2" id="deleteFolder" data-id="{{ folder.id }}">
-                <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
+                <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteFolderModal"></i>
             </a>
         </div>
-        <div class="tile-body">
+        <div class="tile-body" id="folder" data-id="{{ folder.id }}">
             <i class="fas fa-folder"></i>
         </div>
         <div class="tile-footer">
@@ -31,16 +41,16 @@
     </div> 
     {% endfor %}
     {% for file in files %}
-    <div class="file-tile" id="file" data-id="{{ file.id }}">
+    <div class="file-tile">
         <div class="tile-header">
-            <a href="#" class="btn btn-link" data-id="{{ folder.id }}" id="editFile">
-                <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#fileModal"></i>
+            <a href="{{ file.url }}" class="btn btn-link" data-id="{{ file.id }}" id="downloadFile">
+                <i class="fas fa-download"></i>
             </a>
-            <a href="#" class="btn btn-link ml-2" id="deleteFile" data-id="{{ folder.id }}">
-                <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
+            <a href="#" class="btn btn-link ml-2" id="deleteFile" data-id="{{ file.id }}">
+                <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteFileModal"></i>
             </a>
         </div>
-        <div class="tile-body">
+        <div class="tile-body" id="file" data-id="{{ file.id }}">
             <i class="fas fa-file"></i>
         </div>
         <div class="tile-footer">
@@ -54,38 +64,103 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title" id="fileModalLabel">Add File</h5>
                 <button type="close" class="btn-close" id="close-note" data-bs-dismiss="modal" aria-label="Close"></button>                
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <input type="text" id="name" class="form-control" placeholder="Name" required>
+            <form id="add-file" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" id="file-name" name="name" class="form-control" placeholder="Name" required>
+                    </div>
+                    <div class="mb-3" id="file-upload">
+                        <input class="form-control" id="file" type="file" name="file" accept=".txt, .pdf, .png, .jpg, .jpeg, .mp4, .mov, .webm, .doc, .docx, .xls, .xlsx">
+                        <h5 style="font-size: 12px; font-weight: bold; margin-top: 20px;">Supported File Types: jpeg, png, txt, doc, docx, pdf, mp4, mov, webm, xlsx, xls</h5>
+                        <h5 style="font-size: 12px; font-weight: bold; margin-top: 0px;">Max File Size: 10MB</h5>
+                    </div>
                 </div>
-                <div class="mb-3" id="file-upload">
-                    <input class="form-control" type="file" name="file" accept=".txt, .pdf, .png, .jpg, .jpeg, .mp4, .mov, .webm, .doc, .docx, .xls, .xlsx" required>
-                    <h5 style="font-size: 12px; font-weight: bold; margin-top: 20px;">Supported File Types: jpeg, png, txt, doc, docx, pdf, mp4, mov, webm, xlsx, xls</h5>
-                    <h5 style="font-size: 12px; font-weight: bold; margin-top: 0px;">Max File Size: 10MB</h5>
+                <div class="modal-footer">
+                    <div>
+                        <button class="add-button" type="submit" id="confirm-add">Add</button>
+                    </div>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="addFolderModal" aria-labelledby="addFolderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFolderModalLabel">Add Folder</h5>
+                <button type="close" class="btn-close" id="close-note" data-bs-dismiss="modal" aria-label="Close"></button>                
             </div>
-            <div class="modal-footer">
-                <div>
-                    <button class="add-button" type="submit" id="confirm-save">Save</button>
+            <form id="add-folder">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" id="add-folder-name" name="add-folder-name" class="form-control" placeholder="Name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button class="add-button" type="submit" id="add-folder">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="editFolderModal" aria-labelledby="editFolderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editFolderModalLabel">Edit Folder</h5>
+                <button type="close" class="btn-close" id="close-note" data-bs-dismiss="modal" aria-label="Close"></button>                
+            </div>
+            <form id="edit-folder">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" id="folder-name" name="folder-name" class="form-control" placeholder="Name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button class="add-button" type="submit" id="save-folder">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="deleteFolderModal" aria-labelledby="deleteFolderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteFolderModalLabel">Delete Folder</h5>
+                <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Confirm to delete the folder</p>
+                <div class="modal-footer">
+                    <button class="update-button" type="button" data-bs-dismiss="modal">Cancel</button>
+                    <button class="update-button" type="submit" id="confirm-delete-folder" style="background-color: red;">Delete</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" tabindex="-1" id="deleteModal" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="deleteFileModal" aria-labelledby="deleteFileModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Folder (or) File</h5>
+                <h5 class="modal-title" id="deleteFileModalLabel">Delete File</h5>
                 <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Confirm Delete</p>
+                <p>Confirm to delete the file</p>
                 <div class="modal-footer">
                     <button class="update-button" type="button" data-bs-dismiss="modal">Cancel</button>
-                    <button class="update-button" type="submit" id="confirm-delete" style="background-color: red;">Delete</button>
+                    <button class="update-button" type="submit" id="confirm-delete-file" style="background-color: red;">Delete</button>
                 </div>
             </div>
         </div>
@@ -94,47 +169,132 @@
 <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>
     $(document).ready(function(){
-        let fileId = null;
-        let folderId = null;
-        let parentFolderId = null;
-        $('#addFolder').on('click', function(){
-            parentFolderId = null;
-            fileId = null;
-            folderId = null;
-            $('#file-upload').hide();
-        });
-
-        $('#addFile').on('click', function(){
-            parentFolderId = null;
-            fileId = null;
-            folderId = null;
-            fileId = $(this).data('id');
-        });
-
-        $('#folder').on('click', function(){
-            parentFolderId = $(this).data('id');
-        });
-
-        $('#file').on('click', function(){
-            fileId = $(this).data('id');
-        });
-        
-
-
-
-
-
-        $('#confirm-delete').on('click', function () {
+        let currentFolderId = "";
+        $(document).on('click', '#home', function(){
             $.ajax({
-                url: '{% url "delete" %}',
-                method: 'POST',
-                data: JSON.stringify({ }),
-                success: function (response) {
-                    
+                url: "{% url 'files' %}",
+                type: 'GET',
+                success: function(response){
+                    console.log('Home page loaded');
+                },
+                error: function(error){
+                    alert(error);
                 }
             });
         });
 
+        $(document).on('click', '#addFolder', function(){
+            $('#add-folder-name').val('');
+        });
+
+        $(document).on('submit', '#add-folder', function(){
+            let folderName = $('#add-folder-name').val();
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'add_folder' %}",
+                data: {
+                    'csrfmiddlewaretoken': "{{ csrf_token }}",
+                    'folder_name': folderName,
+                    'parent_folder_id': currentFolderId
+                },
+                success: function(response){
+                    if(response.success){
+                        console.log(response.message);
+                        location.reload();
+                    }else{
+                        alert('Error adding folder');
+                    }
+                },
+                error: function(error){
+                    alert(error)
+                }
+            });
+        });
+
+        let editFolderId;
+        $(document).on('click', '#editFolder', function(){
+            editFolderId = $(this).closest('a').data('id');
+            let folderName = $(this).closest('.file-tile').find('.file-name').text();
+            $('#folder-name').val(folderName);
+        });
+
+        $(document).on('submit', '#edit-folder', function(){
+            let folderName = $('#folder-name').val();
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'edit_folder' %}",
+                data: {
+                    'csrfmiddlewaretoken': "{{ csrf_token }}",
+                    'folder_id': editFolderId,
+                    'folder_name': folderName
+                },
+                success: function(response){
+                    if(response.success){
+                        console.log(response.message);
+                        location.reload();
+                    }else{
+                        alert('Error saving folder');
+                    }
+                },
+                error: function(error){
+                    alert(error)
+                }
+            });
+        });
+
+        let deleteFolderId;
+        $(document).on('click', '#deleteFolder', function(){
+            deleteFolderId = $(this).closest('a').data('id');
+        });
+
+        $(document).on('click', '#confirm-delete-folder', function(){
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'delete_folder' %}",
+                data: {
+                    'csrfmiddlewaretoken': "{{ csrf_token }}",
+                    folder_id: deleteFolderId
+                },
+                success: function(response){
+                    if(response.success){
+                        console.log(response.message);
+                        location.reload();
+                    }else{
+                        alert('Error deleting folder')
+                    }   
+                },
+                error: function(error){
+                    alert(error)
+                }
+            })
+        });
+
+        let deleteFileId;
+        $(document).on('click', '#deleteFile', function(){
+            deleteFileId = $(this).closest('a').data('id');
+        });
+
+        $(document).on('click', '#confirm-delete-file', function(){
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'delete_file' %}",
+                data: {
+                    'csrfmiddlewaretoken': "{{ csrf_token }}",
+                    file_id: deleteFileId
+                },
+                success: function(response){
+                    if(response.success){
+                        console.log(response.message);
+                        location.reload();
+                    }else{
+                        alert('Error deleting file');
+                    }   
+                },
+                error: function(error){
+                    alert(error)
+                }
+            })
+        });
 
     });
 

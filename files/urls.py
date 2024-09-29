@@ -4,6 +4,10 @@ from . import views
 
 urlpatterns = [
     path('files', views.files, name= "files"),
-    path('delete-file-folder/', views.delete_file_folder, name= "delete"),
-    path('add-update-file-folder/', views.add_update_file_folder, name= "save")
+    path('fetch-folder-files/', views.fetch_folders_files, name= "fetch"),
+    path('delete-folder/', views.delete_folder, name= "delete_folder"),
+    path('delete-file/', views.delete_file, name= "delete_file"),
+    path('edit-folder/', views.edit_folder, name= "edit_folder"),
+    path('add-folder/', views.add_folder, name= "add_folder"),
+    path('add-file/', views.add_file, name= "add_file")
 ]
