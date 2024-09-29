@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from cloudinary.models import CloudinaryField
+from django.utils import timezone
 
 # Create your models here.
 
@@ -26,7 +26,8 @@ class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     parent_folder = models.ForeignKey(Folder, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    file = CloudinaryField('file')
+    url = models.URLField(default='')
+    public_id = models.CharField(max_length=255, default=timezone.now)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta():

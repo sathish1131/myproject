@@ -139,9 +139,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'duhmvvj7f',
     'API_KEY': '517469479332576',
-    'API_SECRET': 'rfLjXDk_CFln16YN9f24ecBYPnk',
-    'secure': True
+    'API_SECRET': 'rfLjXDk_CFln16YN9f24ecBYPnk'
 }
+
+cloudinary.config(cloud_name='duhmvvj7f', api_key='517469479332576', api_secret='rfLjXDk_CFln16YN9f24ecBYPnk')
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 

@@ -43,16 +43,16 @@
     {% for file in files %}
     <div class="file-tile">
         <div class="tile-header">
-            <a href="{{ file.url }}" class="btn btn-link" data-id="{{ file.id }}" id="downloadFile">
+            <a href="{{ file.url }}" download="{{ file.name }}" class="btn btn-link" data-id="{{ file.id }}" id="downloadFile">
                 <i class="fas fa-download"></i>
             </a>
             <a href="#" class="btn btn-link ml-2" id="deleteFile" data-id="{{ file.id }}">
                 <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteFileModal"></i>
             </a>
         </div>
-        <div class="tile-body" id="file" data-id="{{ file.id }}">
+        <a class="tile-body" href="{{ file.url }}" id="file" data-id="{{ file.id }}">
             <i class="fas fa-file"></i>
-        </div>
+        </a>
         <div class="tile-footer">
             <p class="file-name">{{ file.name }}</p>
             <p class="file-date">Last updated: {{ file.updated_at }}</p>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="modal-footer">
                     <div>
-                        <button class="add-button" type="submit" id="add-file">Add</button>
+                        <button class="add-button" type="submit">Add</button>
                     </div>
                 </div>
             </form>
@@ -180,20 +180,28 @@
             $('#add-folder-name').val('');
         });
 
-        $(document).on('submit', '#add-file', function(){
+        $(document).on('click', '#addFile', function(){
+            $('#file-name').val('');
+        });
+
+        $('#add-file').on('submit', function(e){
+            e.preventDefault();
             let parent_folder_id = localStorage.getItem('currentFolderId');
             let formData = new FormData(this);
             formData.append('parent_folder_id', parent_folder_id);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
             $.ajax({
-                type: 'POST',
                 url: '{% url "add_file" %}',
+                type: 'POST',
                 data: formData,
+                contentType: false,
+                processData: false,
                 success: function(response){
                     console.log('File uploaded successfully');
                     location.reload();
                 },
                 error: function(error){
-                    alert(error);
+                    alert(String(error.message));
                 }
             });
         });

@@ -1,6 +1,10 @@
+import cloudinary.api
+import cloudinary.uploader
 from django.shortcuts import render, get_object_or_404
 from .models import File, Folder
 from django.http import JsonResponse
+import cloudinary.uploader
+import os
 
 # Create your views here.
 
@@ -47,8 +51,11 @@ def delete_file(request):
     if request.method == 'POST':
         file_id = request.POST.get('file_id')
         file = get_object_or_404(File, user=request.user, id=file_id)
+        file_type = get_file_type(file.url)
+        cloudinary.uploader.destroy(file.public_id, resource_type=file_type)
         file.delete()
         return JsonResponse({'success': True, 'message': 'File deleted successfully'})
+        
     
 def edit_folder(request):
     if request.method == 'POST':
@@ -95,6 +102,18 @@ def add_file(request):
             return JsonResponse({'success': False, 'message': 'Unsupported file type'})
         if uploaded_file.size > MAX_FILE_SIZE:
             return JsonResponse({'success': False, 'message': 'File size exceeded the maximum file size limit'})
-        # logic for file type and size restriction
-        File.objects.create(user=request.user, name=file_name, parent_folder=parent_folder, file=uploaded_file)
+        file = cloudinary.uploader.upload(uploaded_file, resource_type="auto")
+        File.objects.create(user=request.user, name=file_name, parent_folder=parent_folder, url= file['url'], public_id=file['public_id'])
         return JsonResponse({'success': True, 'message': 'File added successfully'})
+
+
+
+def get_file_type(file_url):
+    _, file_extension = os.path.splitext(file_url)
+    if file_extension in ['.jpg', '.jpeg', '.png']:
+        return 'image'
+    elif file_extension in ['.mp4', '.mov']:
+        return 'video'
+    else:
+        return 'raw'
+        
