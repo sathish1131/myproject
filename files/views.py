@@ -1,9 +1,6 @@
-import cloudinary.uploader
 from django.shortcuts import render, get_object_or_404
 from .models import File, Folder
 from django.http import JsonResponse
-import cloudinary
-import uuid
 
 # Create your views here.
 
@@ -86,16 +83,18 @@ def add_folder(request):
 def add_file(request):
     if request.method == 'POST':
         file_name = request.POST.get('name')
-        file = request.FILES.get('file')
-        unique_file_name = f"{file_name}_{uuid.uuid4()}"
+        uploaded_file = request.FILES.get('file')
         parent_folder_id = request.POST.get('parent_folder_id')
         if parent_folder_id == "":
             parent_folder = None
         else:
             parent_folder = get_object_or_404(Folder, user=request.user, id=parent_folder_id)
-
+        if File.objects.filter(user=request.user, name=file_name, parent_folder=parent_folder).exists():
+            return JsonResponse({'success': False, 'message': 'File name already exists'})
+        if uploaded_file.content_type not in ALLOWED_FILE_TYPES:
+            return JsonResponse({'success': False, 'message': 'Unsupported file type'})
+        if uploaded_file.size > MAX_FILE_SIZE:
+            return JsonResponse({'success': False, 'message': 'File size exceeded the maximum file size limit'})
         # logic for file type and size restriction
-        cloudinary_response = cloudinary.uploader.upload(file, public_id=unique_file_name)
-        secure_url = cloudinary_response['secure_url']
-        File.objects.create(user=request.user, name=file_name, url=secure_url, unique_name=unique_file_name, parent_folder=parent_folder)
+        File.objects.create(user=request.user, name=file_name, parent_folder=parent_folder, file=uploaded_file)
         return JsonResponse({'success': True, 'message': 'File added successfully'})

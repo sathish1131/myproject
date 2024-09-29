@@ -26,8 +26,8 @@ urlpatterns = [
     path('apps/', include('calc.urls')),
     path('apps/', include('todo.urls')),
     path('apps/', include('quotes.urls')),
-    path('apps/', include('calender.urls')),
     path('apps/', include('files.urls')),
+    path('apps/', include('calender.urls')),
     path('apps/', include('notes.urls'))
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

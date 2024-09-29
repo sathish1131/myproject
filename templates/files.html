@@ -8,12 +8,12 @@
 
 <div style="display:flex; justify-content:space-between;">
     <div style="justify-content:left; text-align:left; margin-left:50px;">
-        <button class="add-button" id="back">
+        <a class="add-button" style="text-decoration:none; font-size:20px; text-align:center;" id="back">
             <i class="fas fa-arrow-left"></i>
-        </button>
-        <button class="add-button" id="home" style="margin-left: 10px;">
+        </a>
+        <a href="{% url 'files' %}" class="add-button" id="home" style="margin-left: 10px;font-size:20px; text-align:center;">
             <i class="fas fa-home"></i>
-        </button>
+        </a>
     </div>
     <div style="justify-content:right; text-align:right; margin-right: 30px;">
         <button class="add-button" style="margin-right: 10px;" id="addFile" data-bs-toggle="modal" data-bs-target="#fileModal">Add File</button>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="modal-footer">
                     <div>
-                        <button class="add-button" type="submit" id="confirm-add">Add</button>
+                        <button class="add-button" type="submit" id="add-file">Add</button>
                     </div>
                 </div>
             </form>
@@ -170,12 +170,27 @@
 <script>
     $(document).ready(function(){
         let currentFolderId = "";
+        localStorage.setItem('currentFolderId', currentFolderId);
         $(document).on('click', '#home', function(){
+            currentFolderId = "";
+            localStorage.setItem('currentFolderId', currentFolderId);
+        });
+
+        $(document).on('click', '#addFolder', function(){
+            $('#add-folder-name').val('');
+        });
+
+        $(document).on('submit', '#add-file', function(){
+            let parent_folder_id = localStorage.getItem('currentFolderId');
+            let formData = new FormData(this);
+            formData.append('parent_folder_id', parent_folder_id);
             $.ajax({
-                url: "{% url 'files' %}",
-                type: 'GET',
+                type: 'POST',
+                url: '{% url "add_file" %}',
+                data: formData,
                 success: function(response){
-                    console.log('Home page loaded');
+                    console.log('File uploaded successfully');
+                    location.reload();
                 },
                 error: function(error){
                     alert(error);
@@ -183,19 +198,16 @@
             });
         });
 
-        $(document).on('click', '#addFolder', function(){
-            $('#add-folder-name').val('');
-        });
-
         $(document).on('submit', '#add-folder', function(){
             let folderName = $('#add-folder-name').val();
+            let parent_folder_id = localStorage.getItem('currentFolderId');
             $.ajax({
                 type: 'POST',
                 url: "{% url 'add_folder' %}",
                 data: {
                     'csrfmiddlewaretoken': "{{ csrf_token }}",
                     'folder_name': folderName,
-                    'parent_folder_id': currentFolderId
+                    'parent_folder_id': parent_folder_id
                 },
                 success: function(response){
                     if(response.success){
@@ -220,6 +232,7 @@
 
         $(document).on('submit', '#edit-folder', function(){
             let folderName = $('#folder-name').val();
+            let parent_folder_id = localStorage.getItem('currentFolderId');
             $.ajax({
                 type: 'POST',
                 url: "{% url 'edit_folder' %}",
@@ -227,7 +240,7 @@
                     'csrfmiddlewaretoken': "{{ csrf_token }}",
                     'folder_id': editFolderId,
                     'folder_name': folderName,
-                    'parent_folder_id': currentFolderId
+                    'parent_folder_id': parent_folder_id
                 },
                 success: function(response){
                     if(response.success){
