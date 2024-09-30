@@ -5,6 +5,7 @@ from .models import File, Folder
 from django.http import JsonResponse
 import cloudinary.uploader
 import os
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -29,9 +30,8 @@ def files(request):
     return render(request, 'files.html', {'files': files, 'folders': folders})
         
     
-def fetch_folders_files(request):
+def fetch_folders_files(request, parent_folder_id):
     if request.method == 'GET':
-        parent_folder_id = request.GET.get('parent_folder_id')
         if parent_folder_id == '':
             parent_folder = None
         else:

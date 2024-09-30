@@ -6,85 +6,85 @@
 
 {% block content %}
 
-<div style="display:flex; justify-content:space-between;">
-    <div style="justify-content:left; text-align:left; margin-left:50px;">
-        <a class="add-button" style="text-decoration:none; font-size:20px; text-align:center;" id="back">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <a href="{% url 'files' %}" class="add-button" id="home" style="margin-left: 10px;font-size:20px; text-align:center;">
-            <i class="fas fa-home"></i>
-        </a>
+    <div style="display:flex; justify-content:space-between;">
+        <div style="justify-content:left; text-align:left; margin-left:50px;">
+            <a class="add-button" style="text-decoration:none; font-size:20px; text-align:center;" id="back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <a href="{% url 'files' %}" class="add-button" id="home" style="margin-left: 10px;font-size:20px; text-align:center;">
+                <i class="fas fa-home"></i>
+            </a>
+        </div>
+        <div style="justify-content:right; text-align:right; margin-right: 30px;">
+            <button class="add-button" style="margin-right: 10px;" id="addFile" data-bs-toggle="modal" data-bs-target="#fileModal">Add File</button>
+            <button class="add-button" id="addFolder" data-bs-toggle="modal" data-bs-target="#addFolderModal">Add Folder</button>
+        </div>
     </div>
-    <div style="justify-content:right; text-align:right; margin-right: 30px;">
-        <button class="add-button" style="margin-right: 10px;" id="addFile" data-bs-toggle="modal" data-bs-target="#fileModal">Add File</button>
-        <button class="add-button" id="addFolder" data-bs-toggle="modal" data-bs-target="#addFolderModal">Add Folder</button>
-    </div>
-</div>
-<div class="grid-container">
-    {% for folder in folders %}
-    <div class="file-tile">
-        <div class="tile-header">
-            <a href="#" class="btn btn-link" data-id="{{ folder.id }}" id="editFolder">
-                <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editFolderModal"></i>
-            </a>
-            <a href="#" class="btn btn-link ml-2" id="deleteFolder" data-id="{{ folder.id }}">
-                <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteFolderModal"></i>
-            </a>
-        </div>
-        <div class="tile-body" id="folder" data-id="{{ folder.id }}">
-            <i class="fas fa-folder"></i>
-        </div>
-        <div class="tile-footer">
-            <p class="file-name">{{ folder.name }}</p>
-            <p class="file-date">Last updated: {{ folder.updated_at }}</p>
-        </div>
-    </div> 
-    {% endfor %}
-    {% for file in files %}
-    <div class="file-tile">
-        <div class="tile-header">
-            <a href="{{ file.url }}" download="{{ file.name }}" class="btn btn-link" data-id="{{ file.id }}" id="downloadFile">
-                <i class="fas fa-download"></i>
-            </a>
-            <a href="#" class="btn btn-link ml-2" id="deleteFile" data-id="{{ file.id }}">
-                <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteFileModal"></i>
-            </a>
-        </div>
-        <a class="tile-body" href="{{ file.url }}" id="file" data-id="{{ file.id }}">
-            <i class="fas fa-file"></i>
-        </a>
-        <div class="tile-footer">
-            <p class="file-name">{{ file.name }}</p>
-            <p class="file-date">Last updated: {{ file.updated_at }}</p>
-        </div>
-    </div> 
-    {% endfor %}
-</div>
-<div class="modal fade" tabindex="-1" id="fileModal" aria-labelledby="fileModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fileModalLabel">Add File</h5>
-                <button type="close" class="btn-close" id="close-note" data-bs-dismiss="modal" aria-label="Close"></button>                
+    <div class="grid-container">
+        {% for folder in folders %}
+        <div class="file-tile">
+            <div class="tile-header">
+                <a href="#" class="btn btn-link" data-id="{{ folder.id }}" id="editFolder">
+                    <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editFolderModal"></i>
+                </a>
+                <a href="#" class="btn btn-link ml-2" id="deleteFolder" data-id="{{ folder.id }}">
+                    <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteFolderModal"></i>
+                </a>
             </div>
-            <form id="add-file" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <input type="text" id="file-name" name="name" class="form-control" placeholder="Name" required>
-                    </div>
-                    <div class="mb-3" id="file-upload">
-                        <input class="form-control" id="file" type="file" name="file" accept=".txt, .pdf, .png, .jpg, .jpeg, .mp4, .mov, .webm, .doc, .docx, .xls, .xlsx">
-                        <h5 style="font-size: 12px; font-weight: bold; margin-top: 20px;">Supported File Types: jpeg, png, txt, doc, docx, pdf, mp4, mov, webm, xlsx, xls</h5>
-                        <h5 style="font-size: 12px; font-weight: bold; margin-top: 0px;">Max File Size: 10MB</h5>
-                    </div>
+            <a href="fetch-folder-files/{{ folder.id }}" class="tile-body" id="folder" data-id="{{ folder.id }}">
+                <i class="fas fa-folder"></i>
+            </a>
+            <div class="tile-footer">
+                <p class="file-name">{{ folder.name }}</p>
+                <p class="file-date">Last updated: {{ folder.updated_at }}</p>
+            </div>
+        </div> 
+        {% endfor %}
+        {% for file in files %}
+        <div class="file-tile">
+            <div class="tile-header">
+                <a href="{{ file.url }}" download="{{ file.name }}" class="btn btn-link" data-id="{{ file.id }}" id="downloadFile">
+                    <i class="fas fa-download"></i>
+                </a>
+                <a href="#" class="btn btn-link ml-2" id="deleteFile" data-id="{{ file.id }}">
+                    <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteFileModal"></i>
+                </a>
+            </div>
+            <a class="tile-body" href="{{ file.url }}" id="file" data-id="{{ file.id }}">
+                <i class="fas fa-file"></i>
+            </a>
+            <div class="tile-footer">
+                <p class="file-name">{{ file.name }}</p>
+                <p class="file-date">Last updated: {{ file.updated_at }}</p>
+            </div>
+        </div> 
+        {% endfor %}
+    </div>
+    <div class="modal fade" tabindex="-1" id="fileModal" aria-labelledby="fileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileModalLabel">Add File</h5>
+                    <button type="close" class="btn-close" id="close-note" data-bs-dismiss="modal" aria-label="Close"></button>                
                 </div>
-                <div class="modal-footer">
-                    <div>
-                        <button class="add-button" type="submit">Add</button>
+                <form id="add-file" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="text" id="file-name" name="name" class="form-control" placeholder="Name" required>
+                        </div>
+                        <div class="mb-3" id="file-upload">
+                            <input class="form-control" id="file" type="file" name="file" accept=".txt, .pdf, .png, .jpg, .jpeg, .mp4, .mov, .webm, .doc, .docx, .xls, .xlsx">
+                            <h5 style="font-size: 12px; font-weight: bold; margin-top: 20px;">Supported File Types: jpeg, png, txt, doc, docx, pdf, mp4, mov, webm, xlsx, xls</h5>
+                            <h5 style="font-size: 12px; font-weight: bold; margin-top: 0px;">Max File Size: 10MB</h5>
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <div>
+                            <button class="add-button" type="submit">Add</button>
+                        </div>
+                    </div>
+                </form>
         </div>
     </div>
 </div>
@@ -168,13 +168,14 @@
 </div>
 <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const currentUrl = window.location.pathname;
+        if(currentUrl == '{% url "files" %}'){
+            localStorage.setItem('currentFolderId', "");
+        }
+    });
+
     $(document).ready(function(){
-        let currentFolderId = "";
-        localStorage.setItem('currentFolderId', currentFolderId);
-        $(document).on('click', '#home', function(){
-            currentFolderId = "";
-            localStorage.setItem('currentFolderId', currentFolderId);
-        });
 
         $(document).on('click', '#addFolder', function(){
             $('#add-folder-name').val('');
@@ -182,6 +183,11 @@
 
         $(document).on('click', '#addFile', function(){
             $('#file-name').val('');
+        });
+
+        $(document).on('click', '#folder', function(){
+            let currentFolderId = $(this).closest('a').data('id');
+            localStorage.setItem('currentFolderId', currentFolderId);
         });
 
         $('#add-file').on('submit', function(e){
