@@ -1,12 +1,10 @@
 import cloudinary.api
 import cloudinary.uploader
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import File, Folder
 from django.http import JsonResponse
 import cloudinary.uploader
 import os
-from django.template.loader import render_to_string
-
 # Create your views here.
 
 ALLOWED_FILE_TYPES = [
@@ -39,7 +37,18 @@ def fetch_folders_files(request, parent_folder_id):
         folders = Folder.objects.filter(user=request.user, parent_folder=parent_folder).order_by('name')
         files = File.objects.filter(user=request.user, parent_folder=parent_folder).order_by('name')
         return render(request, 'files.html', {'files': files, 'folders': folders})
-
+    
+def back(request, folder_id):
+    if request.method == 'GET':
+        current_folder = get_object_or_404(Folder, user=request.user, id=folder_id)
+        parent_folder = current_folder.parent_folder
+        if parent_folder:
+            folders = Folder.objects.filter(user=request.user, parent_folder=parent_folder).order_by('name')
+            files = File.objects.filter(user=request.user, parent_folder=parent_folder).order_by('name')
+        else:
+            return redirect('files')
+        return render(request, 'files.html', {'files': files, 'folders': folders})
+        
 def delete_folder(request):
     if request.method == 'POST':
         folder_id = request.POST.get('folder_id')
