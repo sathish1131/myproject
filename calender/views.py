@@ -1,6 +1,9 @@
 from django.shortcuts import render
+import calender
+import datetime
 
 # Create your views here.
 
 def calender(request):
-    return render(request, 'calender.html')
+    now = datetime.date.today()
+    return render(request, 'calender.html', {'calender': now})
