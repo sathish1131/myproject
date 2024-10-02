@@ -5,8 +5,9 @@
 
 {% block content %}
 
-<div class="home-layout">
-    {{ calender|safe }}
-    
+<div class="grid-container">
+    <div class="todo-layout" style="display: flex; justify-content:center;">
+        {{ calender|safe }}
+    </div>
 </div>
 {% endblock %}
