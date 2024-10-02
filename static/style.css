@@ -543,3 +543,61 @@ footer {
     font-size: 12px;
     color: lightgray;
 }
+
+.calender-layout {
+    display: flex;
+    justify-content: center;
+    background-color: #ddd;
+    align-items: center;
+    text-align: center;
+    border-radius: 6px;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    padding: 5px
+}
+
+.calender-layout th {
+    background-color: #a9a9a9;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.calender-layout td {
+    background-color: #ddd;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+.calender-layout td:hover {
+    background-color: #f57f17;
+}
+
+.calender-dropdown {
+    padding: 4px 8px;
+    border-radius: 6px;
+    background-color: #ddd;
+}
+
+.calender-header {
+    justify-content: right;
+    text-align: right;
+    margin-right: 50px;
+    display: flex;
+    flex-direction: wrap;
+}
+
+.calender-header div {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-right: 10px;
+}
+
+.calender-header label {
+    margin-left: 5px;
+    font-weight: bold;
+    color: darkblue;
+}

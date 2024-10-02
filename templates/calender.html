@@ -1,13 +1,50 @@
 {% extends 'background.html' %}
+{% load static %}
 
 {% block title %}Calender{% endblock %}
 {% block page_title %}Calender{% endblock %}
 
 {% block content %}
 
-<div class="grid-container">
-    <div class="todo-layout" style="display: flex; justify-content:center;">
+<div class="calender-header">
+    <div>
+        <label for="month">Month</label>
+        <select class="calender-dropdown" name="month" id="month">
+            {% for month in months %}
+            <option value="{{ forloop.counter }}" {% if forloop.counter == current_month  %}selected{% endif %}>{{ month }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="year">Year</label>
+        <select class="calender-dropdown" name="year" id="year">
+            {% for year in years %}
+            <option value="{{ year }}" {% if year == current_year  %}selected{% endif %}>{{ year }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="decade">Decade</label>
+        <select class="calender-dropdown" name="decade" id="decade">
+            {% for decade in decades %}
+            <option value="{{ decade }}" {% if decade == current_decade  %}selected{% endif %}>{{ decade }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="app-content">
+    <div class="calender-layout">
         {{ calender|safe }}
     </div>
 </div>
+
+<script>
+    let dateBoxes = document.querySelectorAll('td');
+    dateBoxes.forEach(dateBox => {
+        if(dateBox.textContent.trim() == '{{ current_day }}'){
+            dateBox.style.backgroundColor = '#32CD32';
+        }
+    });
+</script>
+
 {% endblock %}
