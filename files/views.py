@@ -7,21 +7,6 @@ import cloudinary.uploader
 import os
 # Create your views here.
 
-ALLOWED_FILE_TYPES = [
-    'image/png',
-    'image/jpeg',
-    'application/pdf',
-    'text/plain',
-    'video/mp4',
-    'video/quicktime',
-    'video/webm',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    ]
-MAX_FILE_SIZE = 10 * 1024 * 1024
-
 def files(request):
     folders = Folder.objects.filter(user=request.user, parent_folder=None).order_by('name')
     files = File.objects.filter(user=request.user, parent_folder=None).order_by('name')
@@ -107,10 +92,6 @@ def add_file(request):
             parent_folder = get_object_or_404(Folder, user=request.user, id=parent_folder_id)
         if File.objects.filter(user=request.user, name=file_name, parent_folder=parent_folder).exists():
             return JsonResponse({'success': False, 'message': 'File name already exists'})
-        if uploaded_file.content_type not in ALLOWED_FILE_TYPES:
-            return JsonResponse({'success': False, 'message': 'Unsupported file type'})
-        if uploaded_file.size > MAX_FILE_SIZE:
-            return JsonResponse({'success': False, 'message': 'File size exceeded the maximum file size limit'})
         file = cloudinary.uploader.upload(uploaded_file, resource_type="auto")
         File.objects.create(user=request.user, name=file_name, parent_folder=parent_folder, url= file['url'], public_id=file['public_id'])
         return JsonResponse({'success': True, 'message': 'File added successfully'})
