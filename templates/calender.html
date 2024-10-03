@@ -37,13 +37,77 @@
         {{ calender|safe }}
     </div>
 </div>
-
+<script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>
-    let dateBoxes = document.querySelectorAll('td');
-    dateBoxes.forEach(dateBox => {
-        if(dateBox.textContent.trim() == '{{ current_day }}'){
-            dateBox.style.backgroundColor = '#32CD32';
-        }
+
+    $(document).ready(function(){
+        let dateBoxes = document.querySelectorAll('td');
+        dateBoxes.forEach(dateBox => {
+            if(dateBox.textContent.trim() == '{{ current_day }}'){
+                dateBox.style.backgroundColor = '#32CD32';
+            }
+        });
+
+        $('#month').on('change', function(){
+            let selectedMonth = $(this).val();
+            let selectedYear = $('#year').val();
+            $.ajax({
+                type: 'GET',
+                url: '{% url "fetch_calender" %}',
+                data: {
+                    month: selectedMonth,
+                    year: selectedYear
+                },
+                success: function(response){
+                    $('.calender-layout').html(response.calender);
+                },
+                error: function(error){
+                    alert(error);
+                }
+            })
+        });
+
+        $('#year').on('change', function(){
+            let selectedYear = $(this).val();
+            let selectedMonth = $('#month').val();
+            $.ajax({
+                type: 'GET',
+                url: '{% url "fetch_calender" %}',
+                data: {
+                    month: selectedMonth,
+                    year: selectedYear
+                },
+                success: function(response){
+                    $('.calender-layout').html(response.calender);
+                },
+                error: function(error){
+                    alert(error);
+                }
+            })
+        });
+
+        $('#decade').on('change', function(){
+            let selectedDecade = $(this).val();
+            let yearDropdown = document.getElementById('year');
+            $.ajax({
+                type: 'GET',
+                url: '{% url "fetch_years" %}',
+                data: {'selected_decade': selectedDecade},
+                success: function(response){
+                    yearDropdown.innerHTML = '';
+                    response.years.forEach(year => {
+                        const option = document.createElement('option');
+                        option.value = year
+                        option.textContent = year
+                        yearDropdown.appendChild(option);
+                    });
+                },
+                error: function(error){
+                    alert(error);
+                }
+            });
+        });
+
     });
 </script>
 
