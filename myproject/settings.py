@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'notes.apps.NotesConfig',
     'todo.apps.TodoConfig',
     'home.apps.HomeConfig',
-    'quotes.apps.QuotesConfig'
+    'quotes.apps.QuotesConfig',
+    'calender.apps.CalenderConfig'
 ]
 
 MIDDLEWARE = [

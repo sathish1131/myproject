@@ -618,10 +618,10 @@ footer {
     padding: 10px;
 }
 
-.event-table th:nth-child(1), .todo-grid td:nth-child(1) {
+.event-table th:nth-child(1), .event-table td:nth-child(1) {
     justify-content: center;
     text-align: center;
-    width: 30%;
+    width: 25%;
 }
 
 .event-table th:nth-child(2) {
@@ -629,7 +629,7 @@ footer {
     text-align: center;
 }
 
-.event-table th:nth-child(2), .todo-grid td:nth-child(2) {
+.event-table th:nth-child(2), .event-table td:nth-child(2) {
     display: flex;
     width: 100%;
     max-width: 500px;
@@ -646,6 +646,6 @@ footer {
     display: none;
 }
 
-.event-table th:nth-child(3), .todo-grid td:nth-child(3) {
-    width: 20%;
+.event-table th:nth-child(3), .event-table td:nth-child(3) {
+    width: 15%;
 }
