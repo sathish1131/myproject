@@ -36,6 +36,42 @@
     <div class="calender-layout">
         {{ calender|safe }}
     </div>
+    <div class="event-layout">
+        <div style="justify-content: right; text-align:right; padding: 10px 20px;">
+            <button type="button" class="add-button" data-bs-toggle="modal" data-bs-target="#addEventModal">Add Event</button>
+        </div>
+        <table id="event-table" class="event-table">
+            <thead>
+                <tr>
+                    <th>Event Time</th>
+                    <th>Event Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr id="row-{{ task.id }}" style="background-color: #d3d3d3;">
+                    <td>
+                        <p>{{ event.time }}</p>
+                    </td>
+                    <td>
+                        <p>{{ event.description }}</p>
+                    </td>
+                    <td style="display:flex; align-items:center;">
+                        <a href="#" class="btn btn-link" style="margin-right:10px;text-align:center;"
+                            data-task-id="{{ event.id }}" id="edit-btn">
+                            <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
+                        </a>
+                        <a href="#" class="btn btn-link ml-2" id="delete-btn" style="margin-right:10px;text-align:center;"
+                            data-task-id="{{ event.id }}">
+                            <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteTaskModal"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
 <script>
