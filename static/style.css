@@ -605,6 +605,7 @@ footer {
 
 .event-layout {
     width: 100%;
+    max-width: 1000px;
     overflow: auto;
     background-color: #ddd;
     border-radius: 4px;
@@ -621,31 +622,40 @@ footer {
 .event-table th:nth-child(1), .event-table td:nth-child(1) {
     justify-content: center;
     text-align: center;
-    width: 25%;
-}
-
-.event-table th:nth-child(2) {
-    justify-content: center;
-    text-align: center;
+    width: 15%;
+    font-weight: bold;
 }
 
 .event-table th:nth-child(2), .event-table td:nth-child(2) {
-    display: flex;
-    width: 100%;
-    max-width: 500px;
-    overflow: auto;
-    font-weight: bolder;
+    justify-content: center;
+    text-align: center;
+    width: 15%;
+    font-weight: bold;
+}
+
+.event-table th:nth-child(3) {
+    justify-content: center;
+    text-align: center;
     align-items: center;
+}
+
+.event-table th:nth-child(3), .event-table td:nth-child(3) {
+    width: 60%;
+    overflow: auto;
+    font-weight: bolder; 
     line-height: normal;
     white-space: nowrap;
     scrollbar-width: none;
     overflow: auto;
 }
 
-.event-table td:nth-child(2)::-webkit-scrollbar {
+.event-table td:nth-child(3)::-webkit-scrollbar {
     display: none;
 }
 
-.event-table th:nth-child(3), .event-table td:nth-child(3) {
+.event-table th:nth-child(4), .event-table td:nth-child(4) {
+    display: flex;
     width: 15%;
+    justify-content: center;
+    text-align: center;
 }

@@ -33,7 +33,7 @@
         </select>
     </div>
 </div>
-<div class="app-content">
+<div class="app-content" style="display: flex; flex-direction:column;">
     <div class="calender-layout">
         {{ calender|safe }}
     </div>
@@ -44,32 +44,13 @@
         <table id="event-table" class="event-table">
             <thead>
                 <tr>
-                    <th>Event Time</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
                     <th>Event Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for event in events %}
-                <tr id="row-{{ event.id }}" style="background-color: #d3d3d3;">
-                    <td>
-                        <p>{{ event.time }}</p>
-                    </td>
-                    <td>
-                        <p>{{ event.description }}</p>
-                    </td>
-                    <td style="display:flex; align-items:center;">
-                        <a href="#" class="btn btn-link" style="margin-right:10px;text-align:center;"
-                            data-task-id="{{ event.id }}" id="edit-btn">
-                            <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editEventModal"></i>
-                        </a>
-                        <a href="#" class="btn btn-link ml-2" id="delete-btn"
-                            style="margin-right:10px;text-align:center;" data-task-id="{{ event.id }}">
-                            <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteEventModal"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -180,12 +161,18 @@
 <script>
 
     $(document).ready(function () {
+        let eventYear = $('#year').val();
+        let eventMonth = $('#month').val();
+        let eventDate;
         let dateBoxes = document.querySelectorAll('td');
         dateBoxes.forEach(dateBox => {
-            if (dateBox.textContent.trim() == '{{ current_day }}') {
+            if (dateBox.textContent.trim() == '{{ current_date }}') {
                 dateBox.style.backgroundColor = '#32CD32';
+                eventDate = '{{ current_date }}';
             }
         });
+
+        loadEvents(eventYear, eventMonth, eventDate);
 
         $('#month').on('change', function () {
             let selectedMonth = $(this).val();
@@ -251,9 +238,49 @@
             let eventYear = $('#year').val();
             let eventMonth = $('#month').val();
             let eventDate = $(this).text();
-
-
+            loadEvents(eventYear, eventMonth, eventDate);
         });
+
+        function loadEvents(year,month, date){
+            $.ajax({
+                method: 'GET',
+                url: '{% url "fetch_events" %}',
+                data: {
+                    'event_year': year,
+                    'event_month': month,
+                    'event_date': date
+                },
+                success: function(response){
+                    $('#event-table tbody').empty();
+                    response.events.forEach(function(event){
+                        let row = $('<tr></tr>');
+                        let eventStartTimeCell = $('<td></td>').text(event.start_time);
+                        let eventEndTimeCell = $('<td></td>').text(event.end_time);
+                        let eventDescriptionCell = $('<td></td>').text(event.event);
+                        let eventActionCell = $('<td style="justify-content:center;text-align:center;"></td>').html(`
+                        <a href="" class="btn btn-link" style="margin-right:10px;text-align:center;"
+                            data-id="${event.id}" id="edit-btn">
+                            <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editEventModal"></i>
+                        </a>
+                        <a href="" class="btn btn-link ml-2" id="delete-btn"
+                            style="margin-right:10px;text-align:center;" data-id="${event.id}">
+                            <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteEventModal"></i>
+                        </a>`);
+
+                        row.append(eventStartTimeCell);
+                        row.append(eventEndTimeCell);
+                        row.append(eventDescriptionCell);
+                        row.append(eventActionCell);
+
+                        $('#event-table tbody').append(row);
+
+                    });
+                },
+                error: function(error){
+                    alert(error);
+                }
+            });
+        }
 
     });
 </script>
