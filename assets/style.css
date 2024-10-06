@@ -659,3 +659,7 @@ footer {
     justify-content: center;
     text-align: center;
 }
+
+.time-dropdown select{
+    width: 100px;
+}

@@ -67,26 +67,20 @@
                 <form id="add-event-form" method="POST">
                     {% csrf_token %}
                     <div class="mb-3"  style="display: flex; flex-direction: row; justify-content:space-around;">
-                        <div>
-                            <label for="start-time">Start time</label>
-                            <select name="start-time" id="start-time" class="form-control">
-                                {% for time in times %}
-                                <option value="{{ time }}">{{ time }}</option>
-                                {% endfor %}
+                        <div class="time-dropdown">
+                            <label for="add-start-time">Start time</label>
+                            <select name="add-start-time" id="add-start-time">
                             </select>
                         </div>
-                        <div>
-                            <label for="end-time">End time</label>
-                            <select name="end-time" id="end-time" class="form-control">
-                                {% for time in times %}
-                                <option value="{{ time }}">{{ time }}</option>
-                                {% endfor %}
+                        <div class="time-dropdown">
+                            <label for="add-end-time">End time</label>
+                            <select name="add-end-time" id="add-end-time">
                             </select>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="event-description">Event Description</label>
-                        <textarea name="event-description" id="event-description" class="form-control" rows="3"></textarea>
+                        <label for="add-event-description">Event Description</label>
+                        <textarea name="add-event-description" id="add-event-description" class="form-control" rows="3"></textarea>
                     </div>
                     <button type="submit" class="add-button">Add Event</button>
                 </form>
@@ -107,20 +101,14 @@
                     {% csrf_token %}
                     <input type="hidden" name="event_id" id="edit-event-id">
                     <div class="mb-3"  style="display: flex; flex-direction: row; justify-content:space-around;">
-                        <div>
-                            <label for="start-time">Start time</label>
-                            <select name="start-time" id="start-time" class="form-control">
-                                {% for time in times %}
-                                <option value="{{ time }}">{{ time }}</option>
-                                {% endfor %}
+                        <div class="time-dropdown">
+                            <label for="edit-start-time">Start time</label>
+                            <select name="edit-start-time" id="edit-start-time">
                             </select>
                         </div>
-                        <div>
-                            <label for="end-time">End time</label>
-                            <select name="end-time" id="end-time" class="form-control">
-                                {% for time in times %}
-                                <option value="{{ time }}">{{ time }}</option>
-                                {% endfor %}
+                        <div class="time-dropdown">
+                            <label for="edit-end-time">End time</label>
+                            <select name="edit-end-time" id="edit-end-time">
                             </select>
                         </div>
                     </div>
@@ -145,7 +133,7 @@
             <div class="modal-body">
                 <form action="" method="post" id="delete-event-form">
                     {% csrf_token %}
-                    <p>Confirm Delete Task</p>
+                    <p>Confirm Delete Event</p>
                     <div class="modal-footer">
                         <button class="update-button" type="button" data-bs-dismiss="modal"
                             id="cancel-delete">Cancel</button>
@@ -164,12 +152,42 @@
         let eventYear = $('#year').val();
         let eventMonth = $('#month').val();
         let eventDate;
+        let currentDate = '{{ current_date }}';
         let dateBoxes = document.querySelectorAll('td');
         dateBoxes.forEach(dateBox => {
-            if (dateBox.textContent.trim() == '{{ current_date }}') {
+            if (dateBox.textContent.trim() == currentDate) {
                 dateBox.style.backgroundColor = '#32CD32';
-                eventDate = '{{ current_date }}';
+                eventDate = currentDate;
+            }else{
+                dateBox.style.backgroundColor = '#ddd';
             }
+        });
+
+        $('#add-event-form').on('submit', function(){
+            let event = $('#add-event-description').val();
+            let startTime = $('#add-start-time').val();
+            let endTime = $('#add-end-time').val();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "add_event" %}',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'event': event,
+                    'start_time': startTime,
+                    'end_time': endTime,
+                    'event_date': eventDate,
+                    'event_month': eventMonth,
+                    'event_year': eventYear
+                },
+                success: function(response){
+                    if(response.success){
+                        loadEvents(eventYear,eventMonth, eventDate);
+                    }
+                },
+                error: function(error){
+                    alert(error);
+                }
+            });
         });
 
         loadEvents(eventYear, eventMonth, eventDate);
@@ -235,9 +253,17 @@
         });
 
         $(document).on('click', '.calender-layout td', function () {
-            let eventYear = $('#year').val();
-            let eventMonth = $('#month').val();
-            let eventDate = $(this).text();
+            eventYear = $('#year').val();
+            eventMonth = $('#month').val();
+            eventDate = $(this).text();
+            dateBoxes.forEach(dateBox => {
+                if (dateBox.textContent.trim() == eventDate) {
+                    dateBox.style.backgroundColor = '#32CD32';
+                    currentDate = eventDate;
+                }else{
+                    dateBox.style.backgroundColor = '#ddd';
+                }
+            });
             loadEvents(eventYear, eventMonth, eventDate);
         });
 
@@ -252,35 +278,137 @@
                 },
                 success: function(response){
                     $('#event-table tbody').empty();
-                    response.events.forEach(function(event){
-                        let row = $('<tr></tr>');
-                        let eventStartTimeCell = $('<td></td>').text(event.start_time);
-                        let eventEndTimeCell = $('<td></td>').text(event.end_time);
-                        let eventDescriptionCell = $('<td></td>').text(event.event);
-                        let eventActionCell = $('<td style="justify-content:center;text-align:center;"></td>').html(`
-                        <a href="" class="btn btn-link" style="margin-right:10px;text-align:center;"
-                            data-id="${event.id}" id="edit-btn">
-                            <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editEventModal"></i>
-                        </a>
-                        <a href="" class="btn btn-link ml-2" id="delete-btn"
-                            style="margin-right:10px;text-align:center;" data-id="${event.id}">
-                            <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteEventModal"></i>
-                        </a>`);
-
-                        row.append(eventStartTimeCell);
-                        row.append(eventEndTimeCell);
-                        row.append(eventDescriptionCell);
-                        row.append(eventActionCell);
-
-                        $('#event-table tbody').append(row);
-
-                    });
+                    if(response.success && response.events.length > 0 && Array.isArray(response.events)){
+                        response.events.forEach(function(event){
+                            let row = $('<tr></tr>');
+                            let eventStartTimeCell = $('<td id="start-time"></td>').text(event.start_time);
+                            let eventEndTimeCell = $('<td id="end-time"></td>').text(event.end_time);
+                            let eventDescriptionCell = $('<td id="event"></td>').text(event.event);
+                            let eventActionCell = $('<td style="justify-content:center;text-align:center;"></td>').html(`
+                            <a href="" class="btn btn-link" style="margin-right:10px;text-align:center;"
+                                data-id="${event.id}" id="edit-btn">
+                                <i class="fas fa-edit" data-bs-toggle="modal" data-bs-target="#editEventModal"></i>
+                            </a>
+                            <a href="" class="btn btn-link ml-2" id="delete-btn"
+                                style="margin-right:10px;text-align:center;" data-id="${event.id}">
+                                <i class="fas fa-trash" data-bs-toggle="modal" data-bs-target="#deleteEventModal"></i>
+                            </a>`);
+    
+                            row.append(eventStartTimeCell);
+                            row.append(eventEndTimeCell);
+                            row.append(eventDescriptionCell);
+                            row.append(eventActionCell);
+    
+                            $('#event-table tbody').append(row);
+    
+                        });
+                    }
+                    
                 },
                 error: function(error){
                     alert(error);
                 }
             });
         }
+
+        function timeSlots(){
+            let timeSlots = [];
+            for(let hour=0; hour<24; hour++){
+                for(let minute=0; minute<60; minute+=30){
+                    const formatedHour = String(hour).padStart(2, '0');
+                    const formatedMinute = String(minute).padStart(2, '0');
+                    timeSlots.push(`${formatedHour}:${formatedMinute}`);
+                }
+            }
+            return timeSlots;
+        }
+
+        let editEventId;
+        $(document).on('click', '#edit-btn', function(e){
+            e.preventDefault();
+            editEventId = $(this).closest('a').data('id');
+            let row = $(this).closest('tr');
+            let startTime = row.find('#start-time').text();
+            let endTime = row.find('#end-time').text();
+            let eventDescription = row.find('#event').text();
+            $('#edit-event-description').val(eventDescription);
+            $('#editEventModal').show();
+            populateEditTimeSlots(startTime,endTime);
+        });
+
+        $('#edit-event-form').on('submit', function(){
+            let event = $('#edit-event-description').val();
+            let startTime = $('#edit-start-time').val();
+            let endTime = $('#edit-end-time').val();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "edit_event" %}',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'id': editEventId,
+                    'event': event,
+                    'start_time': startTime,
+                    'end_time': endTime,
+                },
+                success: function(response){
+                    if(response.success){
+                        loadEvents(eventYear,eventMonth, eventDate);
+                    }
+                },
+                error: function(error){
+                    alert(error);
+                }
+            });
+        });
+
+        let deleteEventId;
+        $(document).on('click', '#delete-btn', function(e){
+            e.preventDefault();
+            deleteEventId = $(this).closest('a').data('id');
+            $('#deleteEventModal').show();
+        });
+
+        $(document).on('click', '#confirm-delete', function(){
+            $.ajax({
+                type: 'POST',
+                url: '{% url "delete_event" %}',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'id': deleteEventId,
+                },
+                success: function(response){
+                    if(response.success){
+                        loadEvents(eventYear,eventMonth, eventDate);
+                    }
+                },
+                error: function(error){
+                    alert(error);
+                }
+            });
+        });
+
+        const timeArray = timeSlots();
+        function populateAddTimeSlots(){
+            $('#add-start-time').html(generateTimeSlots(timeArray));
+            $('#add-end-time').html(generateTimeSlots(timeArray));
+        }
+
+        function populateEditTimeSlots(startTime, endTime){
+            $('#edit-start-time').html(generateEditTimeSlots(timeArray, startTime));
+            $('#edit-end-time').html(generateEditTimeSlots(timeArray, endTime));
+        }
+
+        function generateEditTimeSlots(timeArray, selectedTime){
+            return timeArray.map(time => `<option value="${time}" ${time==selectedTime ? 'selected': ''}>${time}</option>`);
+        }
+
+        function generateTimeSlots(timeArray){
+            return timeArray.map(time => `<option value="${time}">${time}</option>`).join('');
+        }
+
+        $('#addEventModal').on('show.bs.modal', function(){
+            populateAddTimeSlots();
+        });
 
     });
 </script>
