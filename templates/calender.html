@@ -39,7 +39,7 @@
     </div>
     <div class="event-layout">
         <div style="justify-content: right; text-align:right; padding: 10px 20px;">
-            <button type="button" class="add-button" data-bs-toggle="modal" data-bs-target="#addEventModal">Add Event</button>
+            <button type="button" class="add-button" data-bs-toggle="modal" data-bs-target="#addEventModal" data-bs-backdrop="false">Add Event</button>
         </div>
         <table id="event-table" class="event-table">
             <thead>
@@ -82,7 +82,7 @@
                         <label for="add-event-description">Event Description</label>
                         <textarea name="add-event-description" id="add-event-description" class="form-control" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="add-button">Add Event</button>
+                    <button type="button" class="add-button" id="add-event">Add Event</button>
                 </form>
             </div>
         </div>
@@ -116,7 +116,7 @@
                         <label for="edit-event-description">Event Description</label>
                         <textarea name="edit-event-description" id="edit-event-description" class="form-control" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="update-button">Save Event</button>
+                    <button type="submit" class="update-button" id="confirm-edit">Save Event</button>
                 </form>
             </div>
         </div>
@@ -163,7 +163,8 @@
             }
         });
 
-        $('#add-event-form').on('submit', function(){
+        $('#add-event').on('click', function(e){
+            e.preventDefault();
             let event = $('#add-event-description').val();
             let startTime = $('#add-start-time').val();
             let endTime = $('#add-end-time').val();
@@ -181,10 +182,14 @@
                 },
                 success: function(response){
                     if(response.success){
+                        $('#addEventModal').hide();
                         loadEvents(eventYear,eventMonth, eventDate);
+                    }else{
+                        alert(response.message);
                     }
                 },
                 error: function(error){
+                    $('#addEventModal').hide();
                     alert(error);
                 }
             });
@@ -256,10 +261,11 @@
             eventYear = $('#year').val();
             eventMonth = $('#month').val();
             eventDate = $(this).text();
-            dateBoxes.forEach(dateBox => {
+            let customDateBoxes = document.querySelectorAll('td');
+            customDateBoxes.forEach(dateBox => {
                 if (dateBox.textContent.trim() == eventDate) {
-                    dateBox.style.backgroundColor = '#32CD32';
                     currentDate = eventDate;
+                    dateBox.style.backgroundColor = '#32CD32';
                 }else{
                     dateBox.style.backgroundColor = '#ddd';
                 }
@@ -336,7 +342,8 @@
             populateEditTimeSlots(startTime,endTime);
         });
 
-        $('#edit-event-form').on('submit', function(){
+        $('#confirm-edit').on('click', function(e){
+            e.preventDefault();
             let event = $('#edit-event-description').val();
             let startTime = $('#edit-start-time').val();
             let endTime = $('#edit-end-time').val();
@@ -353,9 +360,13 @@
                 success: function(response){
                     if(response.success){
                         loadEvents(eventYear,eventMonth, eventDate);
+                        $('#editEventModal').hide();
+                    }else{
+                        alert(response.message);
                     }
                 },
                 error: function(error){
+                    $('#editEventModal').hide();
                     alert(error);
                 }
             });
@@ -368,7 +379,8 @@
             $('#deleteEventModal').show();
         });
 
-        $(document).on('click', '#confirm-delete', function(){
+        $(document).on('click', '#confirm-delete', function(e){
+            e.preventDefault();
             $.ajax({
                 type: 'POST',
                 url: '{% url "delete_event" %}',
@@ -379,9 +391,11 @@
                 success: function(response){
                     if(response.success){
                         loadEvents(eventYear,eventMonth, eventDate);
+                        $('#deleteEventModal').hide();
                     }
                 },
                 error: function(error){
+                    $('#deleteEventModal').modal('hide');
                     alert(error);
                 }
             });
@@ -394,8 +408,8 @@
         }
 
         function populateEditTimeSlots(startTime, endTime){
-            $('#edit-start-time').html(generateEditTimeSlots(timeArray, startTime));
-            $('#edit-end-time').html(generateEditTimeSlots(timeArray, endTime));
+            $('#edit-start-time').html(generateEditTimeSlots(timeArray, startTime.slice(0,-3)));
+            $('#edit-end-time').html(generateEditTimeSlots(timeArray, endTime.slice(0,-3)));
         }
 
         function generateEditTimeSlots(timeArray, selectedTime){
@@ -408,6 +422,12 @@
 
         $('#addEventModal').on('show.bs.modal', function(){
             populateAddTimeSlots();
+            $('#add-event-description').val('');
+        });
+
+        $('.modal').on('hidden.bs.modal', function(){
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
         });
 
     });

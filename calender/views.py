@@ -44,7 +44,7 @@ def fetch_events(request):
         event_month = request.GET.get('event_month')
         event_date = request.GET.get('event_date')
         formated_date = datetime(year=int(event_year),month=int(event_month), day=int(event_date)).date()
-        events = Event.objects.filter(user=request.user, date=formated_date)
+        events = Event.objects.filter(user=request.user, date=formated_date).order_by('start_time')
         events_data = list(events.values('id', 'event', 'start_time', 'end_time'))
         return JsonResponse({'success':True, 'events': events_data})
 
@@ -63,8 +63,12 @@ def edit_event(request):
         end_time = request.POST.get('end_time')
         event = get_object_or_404(Event, user=request.user, id=event_id)
         event.event = event_event
-        event.start_time = datetime.strptime(start_time, '%H:%M')
-        event.end_time = datetime.strptime(end_time, '%H:%M')
+        start_time_obj = datetime.strptime(start_time, '%H:%M').time()
+        end_time_obj = datetime.strptime(end_time, '%H:%M').time()
+        if end_time_obj < start_time_obj:
+            return JsonResponse({'success': False, 'message': 'Invalid time slot'})
+        event.start_time = start_time_obj
+        event.end_time = end_time_obj
         event.save()
         return JsonResponse({'success': True})
     
@@ -77,11 +81,10 @@ def add_event(request):
         event_month = request.POST.get('event_month')
         event_date = request.POST.get('event_date')
         formated_date = datetime(year=int(event_year),month=int(event_month), day=int(event_date)).date()
-        startTimeList = start_time.split(':')
-        endTimeList = end_time.split(':')
-        start_time_obj = datetime(hour=int(startTimeList[0]), minute=int(startTimeList[1])).time()
-        end_time_obj = datetime(hour=int(end_time[0]), minute=int(endTimeList[1])).time()
-        print(start_time_obj, end_time_obj)
+        start_time_obj = datetime.strptime(start_time, '%H:%M').time()
+        end_time_obj = datetime.strptime(end_time, '%H:%M').time()
+        if end_time_obj < start_time_obj:
+            return JsonResponse({'success': False, 'message': 'Invalid time slot'})
         event = Event(user=request.user, event=event_event, start_time=start_time_obj, end_time=end_time_obj, date=formated_date)
         event.save()
         return JsonResponse({'success': True})
