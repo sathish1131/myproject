@@ -182,14 +182,13 @@
                 },
                 success: function(response){
                     if(response.success){
-                        $('#addEventModal').hide();
                         loadEvents(eventYear,eventMonth, eventDate);
+                        $('.btn-close').click();  
                     }else{
                         alert(response.message);
                     }
                 },
                 error: function(error){
-                    $('#addEventModal').hide();
                     alert(error);
                 }
             });
@@ -360,13 +359,12 @@
                 success: function(response){
                     if(response.success){
                         loadEvents(eventYear,eventMonth, eventDate);
-                        $('#editEventModal').hide();
+                        $('.btn-close').click();
                     }else{
                         alert(response.message);
                     }
                 },
                 error: function(error){
-                    $('#editEventModal').hide();
                     alert(error);
                 }
             });
@@ -391,11 +389,10 @@
                 success: function(response){
                     if(response.success){
                         loadEvents(eventYear,eventMonth, eventDate);
-                        $('#deleteEventModal').hide();
+                        $('.btn-close').click();
                     }
                 },
                 error: function(error){
-                    $('#deleteEventModal').modal('hide');
                     alert(error);
                 }
             });
@@ -425,12 +422,8 @@
             $('#add-event-description').val('');
         });
 
-        $('.modal').on('hidden.bs.modal', function(){
-            $('.modal-backdrop').remove();
-            $('body').removeClass('modal-open');
-        });
-
     });
+
 </script>
 
 {% endblock %}
