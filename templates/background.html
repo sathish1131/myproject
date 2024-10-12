@@ -26,6 +26,9 @@
                 <ul class="navbar-left">
                     <li><a href="/">Home</a></li>
                     <li><a href="{% url 'register' %}">Register</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href id="notification" data-bs-toggle="modal" data-bs-target="#notificationModal">Notification</a></li>
+                    {% endif %}
                 </ul>
                 <div class="nav-header">
                     <h1>{% block page_title %}{% endblock %}</h1>
@@ -49,7 +52,68 @@
     
         {% endblock %}
     </div>
+    <div class="modal fade" tabindex="-1" id="notificationModal" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                    <button type="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div style="display: flex; align-items:center;">
+                            <input type="checkbox" id="enable-notification" style="align-items:center;font-size:16px;">
+                            <p style="align-items:center;font-size:16px;margin-left: 10px; margin-top:18px;">Enable mail notification for custom quotes and events daily!</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="update-button" id="confirm-save-notification">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="{% static 'bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#confirm-save-notification').on('click', function(e){
+                e.preventDefault();
+                let enableNotification = $('#enable-notification').is(':checked');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "notification" %}',
+                    data: {
+                        'notification': enableNotification,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response){
+                        $('.btn-close').click();
+                    },
+                    error: function(err){
+                        alert(err);
+                    }
+                })
+            });
+
+            $('#notification').on('click', function(){
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url "notification_status" %}',
+                    success: function(response){
+                        $('#enable-notification').prop('checked', response.status);
+                    },
+                    error: function(err){
+                        alert(err);
+                    }
+                })
+            });
+
+        });
+
+    </script>
 </body>
 
 </html>
