@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import cloudinary_storage, cloudinary
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o=1bmt+!$w!inrlkwth)=oi)fr(c4g-mnm%i1yaw9eyur@yww2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -87,11 +87,8 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'myproject',
-        'USER': 'satheesh',
-        'PASSWORD': 'kumar@1131',
-        'HOST': 'localhost'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -139,12 +136,6 @@ STATICFILES_DIRS = [
 STATIC_ROOT = 'assets'
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'duhmvvj7f',
-    'API_KEY': '517469479332576',
-    'API_SECRET': 'rfLjXDk_CFln16YN9f24ecBYPnk'
-}
 
 cloudinary.config(cloud_name='duhmvvj7f', api_key='517469479332576', api_secret='rfLjXDk_CFln16YN9f24ecBYPnk')
 
